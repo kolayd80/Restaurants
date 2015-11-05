@@ -1,0 +1,33 @@
+body {
+	font-family: 'Vollkorn', serif;
+	color:#333333;
+	font-size:16px;
+	margin: 0 auto;
+    background: #f5f5f5;
+	}
+	
+	h2 {	
+	font-size: 28px;
+	font-style:italic;	
+	text-align:center;
+	}
+	
+	a{
+		text-decoration:none;
+	}
+	p{
+		text-align:center;
+	}
+
+#wrap{
+	width: 800px;	
+	margin: 0 auto;		
+}
+
+#mapContainer {
+	margin: 2% auto;
+	position:relative;
+    height: 500px;
+    width: 1000px;
+	border:10px solid #eaeaea;	
+}

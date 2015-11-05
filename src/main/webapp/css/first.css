@@ -1,0 +1,170 @@
+body{
+    background: url("b4.jpg") fixed ;
+}
+#logo
+{
+    display: block;
+    margin: 0 auto;
+
+}
+.invitation
+{
+    display: block;
+    text-align: justify;
+    margin: 1% 20%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-style: italic;
+}
+.footer td
+{
+    background-color: transparent;
+}
+.footer
+{
+    width: 1000px;
+    background-color: #c0a16b;
+    opacity: 0.9;
+    margin: auto;
+    border-radius: 20px;
+    text-decoration: none;
+    color: saddlebrown;
+    padding: auto;
+    text-align: center;
+    font-weight:bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-style: italic;
+}
+
+.table-striped th
+{
+    background: #c0a16b;
+    color: black;
+    text-align: center;
+    border-left: 1px solid #5e5e5e;
+    border-top: 1px solid #5e5e5e;
+    border-right: 1px solid #5e5e5e;
+
+
+}
+.table-striped
+{
+    border: 3px solid black;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+    opacity: 0.9;
+    margin: 2% auto;
+    position:relative;
+    height: auto;
+    width: auto;
+}
+.table-striped tr
+{
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    text-align: inherit;
+    ;
+    }
+.table-striped td
+{
+    border-left: 1px solid #5e5e5e;
+    border-top: 1px solid #5e5e5e;
+    border-right: 1px solid #5e5e5e;
+    border-bottom: 1px solid #5e5e5e;
+    background-color: silver;
+    text-align: center;
+
+}
+
+.name:hover span
+{
+    display: block;
+    z-index: 2;
+    margin:0;
+    text-decoration: none;
+    position: absolute;
+    width: 250px;
+    font-weight: bold;
+    font-style: italic;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.review
+{
+    display: none;
+    background: linear-gradient(to top,#F4F048,papayawhip);
+    border: 1px solid sienna;
+    box-shadow: saddlebrown;
+    border-radius: 25px;
+}
+
+.form-group{
+    margin: 2% auto;
+    position:relative;
+    height: 50px;
+    width: 500px;
+}
+.totalrating:hover span
+{
+    display: block;
+    z-index: 2;
+    margin: 20px auto;
+    text-decoration: none;
+    position: absolute;
+    width: 250px;
+    font-weight: bold;
+    font-style: italic;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.rating
+{
+    display:none;
+    background: linear-gradient(to top,#F4F048,papayawhip);
+    border: 1px solid sienna;
+    box-shadow: saddlebrown;
+    border-radius: 25px;
+}
+.table-responsive
+{
+    margin:0 auto;
+}
+.btns{
+    width: 200px;
+    margin:0 auto;
+}
+.modal-title{
+    width: 160px;
+    margin:0 auto;
+}
+.form-textarea-group{
+    margin: 2% auto;
+    position:relative;
+    height: 150px;
+    width: 500px;
+}
+.labels{
+    width: 160px;
+    margin:0 auto;
+}
+
+table {
+    width: 600px;
+    margin: auto;
+}
+
+#rating {position:relative; height:16px; cursor:pointer; width:83px; } /* Блок рейтинга*/
+#rating_blank, #rating_votes, #rating_hover {height:16px; position:absolute}
+#rating_blank { background:url(ratings.png); width:83px; } /* "Чистые" звездочки */
+#rating_votes {background:url(ratings.png) 0 -16px} /*  Закрашенные звездочки */
+#rating_hover {background:url(ratings.png) 0 -32px; display:none}  /*  звездочки при голосовании */
+
+#interior {position:relative; height:16px; cursor:pointer; width:83px; float:right} /* Блок рейтинга*/
+#interior_blank, #interior_votes, #interior_hover {height:16px; position:absolute}
+#interior_blank { background:url(ratings.png); width:83px; } /* "Чистые" звездочки */
+#interior_votes {background:url(ratings.png) 0 -16px} /*  Закрашенные звездочки */
+#interior_hover {background:url(ratings.png) 0 -32px; display:none}  /*  звездочки при голосовании */
+
+#service {position:relative; height:16px; cursor:pointer; width:83px; float:right} /* Блок рейтинга*/
+#service_blank, #service_votes, #service_hover {height:16px; position:absolute}
+#service_blank { background:url(ratings.png); width:83px; } /* "Чистые" звездочки */
+#service_votes {background:url(ratings.png) 0 -16px} /*  Закрашенные звездочки */
+#service_hover {background:url(ratings.png) 0 -32px; display:none}  /*  звездочки при голосовании */
