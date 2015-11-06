@@ -33,7 +33,8 @@ public class PhotoController {
     @RequestMapping(value="/upload", method=RequestMethod.POST)
     public void handleFileUpload(@RequestParam("file") MultipartFile file,
                                                  @RequestParam("idRestaurant") Long restaurantId){
-        String name = "src/main/webapp/photo/";
+        //String name = "src/main/webapp/photo/";
+        String name = System.getenv("OPENSHIFT_DATA_DIR")+"photo/";
         UUID fileUuid = UUID.randomUUID();
         name = name+fileUuid+".jpg";
         if (!file.isEmpty()) {
