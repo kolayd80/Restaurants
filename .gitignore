@@ -1,0 +1,6 @@
+.idea/*
+.mvn/*
+out/*
+target/*
+src/main/webapp/photo/*
+*.iml
