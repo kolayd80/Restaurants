@@ -29,9 +29,9 @@ public class PhotoService {
 
     public List<Photo> findPhoto(Long restaurantId){
         List<Photo> photos = photoRepository.findByRestaurant(restaurantService.findOne(restaurantId));
-        for (Photo photo:photos) {
-            photo.setName(photo.getName().replace("src/main/webapp/", "http://localhost:8080/"));
-        }
+//        for (Photo photo:photos) {
+//            photo.setName(photo.getName().replace("src/main/webapp/", "http://localhost:8080/"));
+//        }
         return photos;
     }
 }
