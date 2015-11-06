@@ -1,4 +1,4 @@
-<Context path="/" aliases="/static=${OPENSHIFT_DATA_DIR}">
+<Context path="/" aliases="/static=/var/lib/openshift/563cb1ae89f5cf71250000ba/app-root/data">
 
     <!-- Default set of monitored resources -->
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
