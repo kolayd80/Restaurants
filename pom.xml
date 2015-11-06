@@ -146,13 +146,23 @@
 
 		<profile>
 			<id>release</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources/release</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>openshift</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
 				<resources>
 					<resource>
-						<directory>src/main/resources/release</directory>
+						<directory>src/main/resources/openshift</directory>
 					</resource>
 				</resources>
 			</build>
