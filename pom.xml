@@ -115,7 +115,9 @@
 	<profiles>
 		<profile>
 			<id>develop</id>
-
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<build>
 				<resources>
 					<resource>
@@ -127,6 +129,7 @@
 
 		<profile>
 			<id>release</id>
+
 			<build>
 				<resources>
 					<resource>
@@ -135,19 +138,7 @@
 				</resources>
 			</build>
 		</profile>
-		<profile>
-			<id>openshift</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources/openshift</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
+
 	</profiles>
 	
 
