@@ -51,7 +51,7 @@ public class Restaurant implements Serializable {
     @Column(name = "longitude")
     private Double longitude;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
