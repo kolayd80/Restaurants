@@ -49,23 +49,18 @@ public class Restaurant implements Serializable {
     private Set<Label> labels = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "id")
     private Chain chain;
 
     @ManyToOne
-    @JoinColumn(name = "id")
     private Country country;
 
     @ManyToOne
-    @JoinColumn(name = "id")
     private Locality locality;
 
     @ManyToOne
-    @JoinColumn(name = "id")
     private Sublocality sublocality;
 
     @ManyToOne
-    @JoinColumn(name = "id")
     private Street street;
 
     @Column(name = "address")

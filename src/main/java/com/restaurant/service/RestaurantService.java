@@ -18,7 +18,7 @@ public class RestaurantService {
     private RestaurantRepository restaurantRepository;
 
     public Restaurant save(Restaurant restaurant) {
-        restaurant.setTotalrating(Math.rint(100.0*(0.4*restaurant.getKitchenrating()+0.3*restaurant.getServicerating()+0.3*restaurant.getInteriorrating())) / 100.0);
+        //restaurant.setTotalrating(Math.rint(100.0*(0.4*restaurant.getKitchenrating()+0.3*restaurant.getServicerating()+0.3*restaurant.getInteriorrating())) / 100.0);
         restaurant.setAddingDate(new DateTime());
         return restaurantRepository.save(restaurant);
     }
@@ -28,7 +28,8 @@ public class RestaurantService {
     }
 
     public List<Restaurant> findOrderByTotalratingDesc() {
-        return restaurantRepository.findByOrderByTotalratingDesc();
+        return restaurantRepository.findAll();
+        //return restaurantRepository.findByOrderByTotalratingDesc();
     }
 
     public Restaurant findOne(Long id) {

@@ -18,7 +18,7 @@ public class Country {
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
     private Set<Locality> localities = new HashSet<>();
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "country")
     private Set<Restaurant> restaurants = new HashSet<>();
 
     public Long getId() {

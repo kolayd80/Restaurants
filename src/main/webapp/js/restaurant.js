@@ -193,9 +193,18 @@ app.controller("AddRestaurantCtrl", function ($scope, Restaurant) {
             alert("Geolocation API не поддерживается в вашем браузере");
         }
         ;
-
+        $scope.labels = [];
     }
 
+    $scope.deleteLabel = function(label) {
+        $scope.labels.splice($scope.labels.indexOf(label), 1);
+    }
+
+    $scope.addLabel = function() {
+        $scope.labels.push({
+            name: ""
+        });
+    }
 
     $scope.saveRestaurant = function () {
         var restaurant = new Restaurant($scope.restaurant);

@@ -16,13 +16,12 @@ public class Locality {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "id")
     private Country country;
 
     @OneToMany(mappedBy = "locality", cascade = CascadeType.ALL)
     private Set<Sublocality> sublocalities = new HashSet<>();
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "locality")
     private Set<Restaurant> restaurants = new HashSet<>();
 
     public Long getId() {

@@ -16,10 +16,9 @@ public class Street {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "id")
     private Sublocality sublocality;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "street")
     private Set<Restaurant> restaurants = new HashSet<>();
 
     public Long getId() {
