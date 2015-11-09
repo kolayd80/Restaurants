@@ -1,0 +1,116 @@
+body{
+    background: url("b4.jpg")no-repeat fixed ;
+    background-size: 100% 800px;
+}
+#logo
+{
+    display: block;
+    border:1pt solid;
+    margin: 0 auto;
+
+}
+#logo:hover
+{
+    cursor: wait;
+}
+.invitation
+{
+    display: block;
+    text-align: justify;
+    margin: 1% 20%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-style: italic;
+}
+.footer td
+{
+    background-color: transparent;
+}
+.footer
+{
+    width: 1000px;
+    background-color: #c0a16b;
+    opacity: 0.9;
+    margin: auto;
+    border-radius: 20px;
+    text-decoration: none;
+    color: saddlebrown;
+    padding: auto;
+    text-align: center;
+    font-weight:bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-style: italic;
+}
+*, *:after, *:before {
+    box-sizing: border-box;
+}
+.block-holder {
+    width: 260px;
+    height: 260px;
+    margin: 30px;
+    float: left;
+    perspective: 1000px;
+}
+.block {
+    width: 260px;
+    height: 260px;
+    transform-style: preserve-3d;
+    transform: translateZ(-130px);
+    transition: transform 350ms;
+}
+.block:hover {
+    transform: rotateY(-78deg) translateZ(20px);
+}
+.block .front, .block .side {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    background:repeating-linear-gradient(#99FF33,#FFFF66);
+    opacity: 75%;
+    backface-visibility: hidden;
+}
+.block .front {
+    transform: translateZ(130px);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.block .side {
+    transform: rotateY(90deg) translateZ(130px);
+    font-size: 0.75em;
+}
+.block:after {
+    content:'';
+    width: 260px;
+    height: 260px;
+    position: absolute;
+    bottom: 0;
+    box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+    transform-origin: 100% 100%;
+    transform: rotateX(90deg) translateY(130px);
+    transition: box-shadow 350ms;
+}
+.block:hover:after {
+    box-shadow: 20px -5px 50px rgba(0, 0, 0, 0.3);
+}
+.block .front, .block .side {
+    transition: box-shadow 350ms;
+}
+.block .front {
+    box-shadow: inset 0px 0px 40px rgba(255, 255, 255, 0);
+}
+.block:hover .front {
+    box-shadow: inset 300px 0px 40px rgba(255, 255, 255, 0.4);
+}
+.block .side {
+    box-shadow: inset 0px 0px 40px rgba(0, 0, 0, 0.4);
+}
+.block:hover .side {
+    box-shadow: inset 300px 0px 40px rgba(0, 0, 0, 0);
+}
+#name15
+{
+    margin:50px auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14pt;
+    text-shadow: 2px #122b40;
+
+}
