@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.4-1201-jdbc41</version>
+			<version>9.2-1004-jdbc41</version>
 
 		</dependency>
 		<dependency>
@@ -126,9 +126,7 @@
 	<profiles>
 		<profile>
 			<id>develop</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+
 			<build>
 				<resources>
 					<resource>
@@ -140,11 +138,13 @@
 
 		<profile>
 			<id>release</id>
-
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<build>
 				<resources>
 					<resource>
-						<directory>src/main/resources/release</directory>
+						<directory>src/main/resources/openshift</directory>
 					</resource>
 				</resources>
 			</build>
