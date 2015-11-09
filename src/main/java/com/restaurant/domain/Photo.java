@@ -27,6 +27,9 @@ public class Photo implements Serializable {
     @ManyToOne
     private Restaurant restaurant;
 
+    @ManyToOne
+    private Chain chain;
+
     public Long getId() {
         return id;
     }
@@ -57,6 +60,14 @@ public class Photo implements Serializable {
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public Chain getChain() {
+        return chain;
+    }
+
+    public void setChain(Chain chain) {
+        this.chain = chain;
     }
 
     @Override

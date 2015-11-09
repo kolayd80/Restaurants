@@ -1,6 +1,9 @@
 package com.restaurant.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -8,10 +11,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import org.joda.time.DateTime;
 
-/**
- * A Restaurant.
- */
 @Entity
 @Table(name = "restaurant")
 public class Restaurant implements Serializable {
@@ -19,45 +20,59 @@ public class Restaurant implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     
     @Column(name = "name", nullable = false)
     private String name;
     
-    @Column(name = "review", length=1000)
-    private String review;
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private Review review;
 
-    @Column(name = "label")
-    private String label;
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private Rating rating;
 
-    @NotNull        
-    @Column(name = "kitchenrating", nullable = false)
-    private Integer kitchenrating;
-
-    @NotNull        
-    @Column(name = "interiorrating", nullable = false)
-    private Integer interiorrating;
-
-    @NotNull        
-    @Column(name = "servicerating", nullable = false)
-    private Integer servicerating;
-    
-    @Column(name = "totalrating")
-    private Double totalrating;
-    
     @Column(name = "latitude")
     private Double latitude;
     
     @Column(name = "longitude")
     private Double longitude;
 
+    @Column(name = "adding_date")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @DateTimeFormat(pattern = "yyyy/MM/dd:HH:mm:ss")
+    @JsonFormat(pattern = "yyyy/MM/dd:HH:mm:ss")
+    private DateTime addingDate;
+
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant")
-    @JsonIgnore
     private Set<Label> labels = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Chain chain;
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Country country;
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Locality locality;
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Sublocality sublocality;
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Street street;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "street_address")
+    private String streetAddress;
 
     public Long getId() {
         return id;
@@ -75,44 +90,12 @@ public class Restaurant implements Serializable {
         this.name = name;
     }
 
-    public String getReview() {
+    public Review getReview() {
         return review;
     }
 
-    public void setReview(String review) {
+    public void setReview(Review review) {
         this.review = review;
-    }
-
-    public Integer getKitchenrating() {
-        return kitchenrating;
-    }
-
-    public void setKitchenrating(Integer kitchenrating) {
-        this.kitchenrating = kitchenrating;
-    }
-
-    public Integer getInteriorrating() {
-        return interiorrating;
-    }
-
-    public void setInteriorrating(Integer interiorrating) {
-        this.interiorrating = interiorrating;
-    }
-
-    public Integer getServicerating() {
-        return servicerating;
-    }
-
-    public void setServicerating(Integer servicerating) {
-        this.servicerating = servicerating;
-    }
-
-    public Double getTotalrating() {
-        return totalrating;
-    }
-
-    public void setTotalrating(Double totalrating) {
-        this.totalrating = totalrating;
     }
 
     public Double getLatitude() {
@@ -147,15 +130,77 @@ public class Restaurant implements Serializable {
         this.labels = labels;
     }
 
-    public String getLabel() {
-        return label;
+    public DateTime getAddingDate() {
+        return addingDate;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setAddingDate(DateTime addingDate) {
+        this.addingDate = addingDate;
     }
 
+    public Rating getRating() {
+        return rating;
+    }
 
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public Chain getChain() {
+        return chain;
+    }
+
+    public void setChain(Chain chain) {
+        this.chain = chain;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public Locality getLocality() {
+        return locality;
+    }
+
+    public void setLocality(Locality locality) {
+        this.locality = locality;
+    }
+
+    public Sublocality getSublocality() {
+        return sublocality;
+    }
+
+    public void setSublocality(Sublocality sublocality) {
+        this.sublocality = sublocality;
+    }
+
+    public Street getStreet() {
+        return street;
+    }
+
+    public void setStreet(Street street) {
+        this.street = street;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getStreetAddress() {
+        return streetAddress;
+    }
+
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -184,29 +229,9 @@ public class Restaurant implements Serializable {
                 "id=" + id +
                 ", name='" + name + "'" +
                 ", review='" + review + "'" +
-                ", label='" + label + "'" +
-                ", kitchenrating='" + kitchenrating + "'" +
-                ", interiorrating='" + interiorrating + "'" +
-                ", servicerating='" + servicerating + "'" +
-                ", totalrating='" + totalrating + "'" +
                 ", latitude='" + latitude + "'" +
                 ", longitude='" + longitude + "'" +
                 '}';
     }
 
-    Restaurant(){
-
-    }
-
-    public Restaurant(String name, String review, String label, Integer kitchenrating, Integer interiorrating, Integer servicerating, Double totalrating, Double latitude, Double longitude) {
-        this.name = name;
-        this.review = review;
-        this.label = label;
-        this.kitchenrating = kitchenrating;
-        this.interiorrating = interiorrating;
-        this.servicerating = servicerating;
-        this.totalrating = totalrating;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
 }
