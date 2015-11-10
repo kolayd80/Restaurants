@@ -1,7 +1,9 @@
 package com.restaurant.controller;
 
 import com.restaurant.controller.util.HeaderUtil;
+import com.restaurant.domain.Label;
 import com.restaurant.domain.Restaurant;
+import com.restaurant.service.LabelService;
 import com.restaurant.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,9 @@ public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
 
+    @Autowired
+    private LabelService labelService;
+
     /**
      * POST  /restaurants -> Create a new restaurant.
      */
@@ -45,6 +50,19 @@ public class RestaurantController {
         Restaurant result = restaurantService.save(restaurant);
         return ResponseEntity.created(new URI("/api/restaurants/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert("restaurant", result.getId().toString()))
+                .body(result);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/restaurant/{restaurantId}/label",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Label> createLabel(@Valid @RequestBody Label label,
+                                             @PathVariable Long restaurantId) throws URISyntaxException {
+
+        Label result = labelService.save(label, restaurantId);
+        return ResponseEntity.created(new URI("/api/label/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert("label", result.getId().toString()))
                 .body(result);
     }
 

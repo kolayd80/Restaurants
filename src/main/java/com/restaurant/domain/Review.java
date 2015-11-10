@@ -13,6 +13,7 @@ public class Review {
     @Column(name = "content", length=1000)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "review_type")
     private ReviewType reviewType;
 

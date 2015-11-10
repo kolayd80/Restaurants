@@ -46,6 +46,7 @@ public class Restaurant implements Serializable {
     private Set<Photo> photos = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant")
+    @JsonIgnore
     private Set<Label> labels = new HashSet<>();
 
     @ManyToOne

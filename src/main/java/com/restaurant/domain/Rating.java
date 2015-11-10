@@ -10,6 +10,7 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "review_type")
     private ReviewType reviewType;
 

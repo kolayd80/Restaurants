@@ -62,6 +62,12 @@ app.factory("Photo", function ($resource) {
     });
 });
 
+app.factory("Label", function ($resource) {
+    return $resource('/api/restaurant/:restaurantId/label/:labelId', {restaurantId:"@restaurantId", labelId: "@labelid"}, {
+
+    });
+});
+
 app.factory("LoginService", function ($resource) {
     return $resource(':action', {},
         {
@@ -151,7 +157,7 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
 
 });
 
-app.controller("AddRestaurantCtrl", function ($scope, Restaurant) {
+app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label) {
 
     function init() {
         function errorNavigator(err) {
@@ -202,7 +208,8 @@ app.controller("AddRestaurantCtrl", function ($scope, Restaurant) {
 
     $scope.addLabel = function() {
         $scope.labels.push({
-            name: ""
+            name: "",
+            restaurant: Restaurant
         });
     }
 
@@ -210,7 +217,14 @@ app.controller("AddRestaurantCtrl", function ($scope, Restaurant) {
         var restaurant = new Restaurant($scope.restaurant);
         restaurant.latitude = marker.getPosition().lat();
         restaurant.longitude = marker.getPosition().lng();
-        restaurant.$save({});
+        restaurant.$save({}, function(){
+            for (var i in $scope.labels) {
+                var label = new Label($scope.labels[i]);
+                label.$save({"restaurantId":restaurant.id});
+            }
+        });
+
+
         document.location="#/list";
     };
 
