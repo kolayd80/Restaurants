@@ -23,9 +23,11 @@ public class Restaurant implements Serializable {
     private String name;
     
     @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Review review;
 
     @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Rating rating;
 
     @Column(name = "latitude")

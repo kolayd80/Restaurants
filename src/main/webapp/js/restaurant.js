@@ -68,6 +68,12 @@ app.factory("Label", function ($resource) {
     });
 });
 
+app.factory("Review", function ($resource) {
+    return $resource('/api/restaurant/:restaurantId/review/:reviewId', {restaurantId:"@restaurantId", reviewId: "@reviewId"}, {
+        update: {method:'PUT'},
+    });
+});
+
 app.factory("LoginService", function ($resource) {
     return $resource(':action', {},
         {
@@ -80,7 +86,7 @@ app.factory("LoginService", function ($resource) {
     );
 });
 
-app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label) {
+app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label, Review) {
 
     function init() {
         var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function(){
@@ -118,6 +124,8 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
         $scope.restaurant = itemRestaurant;
 
         $scope.labels = Label.query({"restaurantId": $routeParams.id});
+
+        $scope.review = Review.get({"restaurantId": $routeParams.id});
 
         // Set of Photos
         $scope.slides = Photo.query({"id": $routeParams.id});
@@ -195,7 +203,12 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
                     };
                 };
             });
-
+            var review = new Review($scope.review);
+            if($scope.review.id==null|undefined) {
+                review.$save({"restaurantId":restaurant.id});
+            } else {
+                review.$update({"restaurantId":restaurant.id, "reviewId":$scope.review.id});
+            };
         });
         document.location="#/list";
     };
@@ -204,7 +217,7 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
 
 });
 
-app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label) {
+app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, Review) {
 
     function init() {
         function errorNavigator(err) {
@@ -247,6 +260,11 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label) 
         }
         ;
         $scope.labels = [];
+        $scope.review = {
+            id: null,
+            content: "",
+            restaurant: null
+        };
     }
 
     $scope.deleteLabel = function(label) {
@@ -269,7 +287,9 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label) 
             for (var i in $scope.labels) {
                 var label = new Label($scope.labels[i]);
                 label.$save({"restaurantId":restaurant.id});
-            }
+            };
+            var review = new Review($scope.review);
+            review.$save({"restaurantId":restaurant.id});
         });
 
 

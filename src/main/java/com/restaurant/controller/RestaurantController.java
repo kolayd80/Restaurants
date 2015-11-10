@@ -3,8 +3,10 @@ package com.restaurant.controller;
 import com.restaurant.controller.util.HeaderUtil;
 import com.restaurant.domain.Label;
 import com.restaurant.domain.Restaurant;
+import com.restaurant.domain.Review;
 import com.restaurant.service.LabelService;
 import com.restaurant.service.RestaurantService;
+import com.restaurant.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +38,9 @@ public class RestaurantController {
     @Autowired
     private LabelService labelService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     /**
      * POST  /restaurants -> Create a new restaurant.
      */
@@ -54,15 +59,28 @@ public class RestaurantController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/restaurant/{restaurantId}/label",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Label> createRestaurantLabel(@Valid @RequestBody Label label,
-                                             @PathVariable Long restaurantId) throws URISyntaxException {
+     @RequestMapping(value = "/restaurant/{restaurantId}/label",
+             method = RequestMethod.POST,
+             produces = MediaType.APPLICATION_JSON_VALUE)
+     public ResponseEntity<Label> createRestaurantLabel(@Valid @RequestBody Label label,
+                                                        @PathVariable Long restaurantId) throws URISyntaxException {
 
         Label result = labelService.save(label, restaurantId);
         return ResponseEntity.created(new URI("/api/label/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert("label", result.getId().toString()))
+                .body(result);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/restaurant/{restaurantId}/review",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Review> createRestaurantReview(@Valid @RequestBody Review review,
+                                                       @PathVariable Long restaurantId) throws URISyntaxException {
+
+        Review result = reviewService.save(review, restaurantId);
+        return ResponseEntity.created(new URI("/api/review/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert("review", result.getId().toString()))
                 .body(result);
     }
 
@@ -99,6 +117,21 @@ public class RestaurantController {
                 .body(result);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/restaurant/{restaurantId}/review/{reviewId}",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Review> updateRestaurantReview(@PathVariable Long restaurantId, @PathVariable Long reviewId, @Valid @RequestBody Review review) throws URISyntaxException {
+        Review oldReview = reviewService.findOne(reviewId);
+        if (oldReview == null) {
+            return createRestaurantReview(review, restaurantId);
+        }
+        Review result = reviewService.save(review, restaurantId);
+        return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert("review", review.getId().toString()))
+                .body(result);
+    }
+
     /**
      * GET  /restaurants -> get all the restaurants.
      */
@@ -128,6 +161,13 @@ public class RestaurantController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Label> getRestaurantLabels(@PathVariable Long restauranId) {
         return labelService.findByRestaurant(restauranId);
+    }
+
+    @RequestMapping(value = "/restaurant/{restauranId}/review",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Review getRestaurantReview(@PathVariable Long restauranId) {
+        return reviewService.findByRestaurant(restauranId);
     }
 
     /**

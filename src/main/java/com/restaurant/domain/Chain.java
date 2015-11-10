@@ -20,8 +20,8 @@ public class Chain implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "adding_date")
-    private LocalDateTime addingDate;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
     @OneToOne(mappedBy = "chain", cascade = CascadeType.ALL)
     private Review review;
@@ -54,12 +54,12 @@ public class Chain implements Serializable {
         this.name = name;
     }
 
-    public LocalDateTime getAddingDate() {
-        return addingDate;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setAddingDate(LocalDateTime addingDate) {
-        this.addingDate = addingDate;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Review getReview() {
