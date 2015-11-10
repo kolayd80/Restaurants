@@ -64,7 +64,7 @@ app.factory("Photo", function ($resource) {
 
 app.factory("Label", function ($resource) {
     return $resource('/api/restaurant/:restaurantId/label/:labelId', {restaurantId:"@restaurantId", labelId: "@labelid"}, {
-
+        update: {method:'PUT'},
     });
 });
 
@@ -80,7 +80,7 @@ app.factory("LoginService", function ($resource) {
     );
 });
 
-app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo) {
+app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label) {
 
     function init() {
         var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function(){
@@ -117,6 +117,8 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
         });
         $scope.restaurant = itemRestaurant;
 
+        $scope.labels = Label.query({"restaurantId": $routeParams.id});
+
         // Set of Photos
         $scope.slides = Photo.query({"id": $routeParams.id});
 
@@ -145,11 +147,56 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
         });
     };
 
+    $scope.deleteLabel = function(label) {
+        $scope.labels.splice($scope.labels.indexOf(label), 1);
+    }
+
+    $scope.addLabel = function() {
+        $scope.labels.push({
+            id: null,
+            name: "",
+            restaurant: Restaurant
+        });
+    }
+
     $scope.saveRestaurant = function () {
         var restaurant = new Restaurant($scope.restaurant);
         restaurant.latitude = marker.getPosition().lat();
         restaurant.longitude = marker.getPosition().lng();
-        restaurant.$update({});
+        restaurant.$update({}, function(){
+            var savedLabels = Label.query({"restaurantId": restaurant.id}, function(){
+                for (var indLabel in savedLabels) {
+                    if(isNaN(indLabel)){
+                        continue;
+                    };
+                    var foundLabel = false;
+                    for (var i in $scope.labels) {
+                        if(isNaN(i)){
+                            continue;
+                        };
+                        if(savedLabels[indLabel].id==$scope.labels[i].id) {
+                            foundLabel = true;
+                            break;
+                        };
+                    };
+                    if(!foundLabel) {
+                        Label.delete({"restaurantId":restaurant.id, "labelId":savedLabels[indLabel].id});
+                    };
+                };
+                for (var i in $scope.labels) {
+                    if(isNaN(i)){
+                        continue;
+                    };
+                    var label = new Label($scope.labels[i]);
+                    if($scope.labels[i].id==null) {
+                        label.$save({"restaurantId":restaurant.id});
+                    } else {
+                        label.$update({"restaurantId":restaurant.id, "labelId":$scope.labels[i].id});
+                    };
+                };
+            });
+
+        });
         document.location="#/list";
     };
 
@@ -208,6 +255,7 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label) 
 
     $scope.addLabel = function() {
         $scope.labels.push({
+            id: null,
             name: "",
             restaurant: Restaurant
         });

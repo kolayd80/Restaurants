@@ -57,7 +57,7 @@ public class RestaurantController {
     @RequestMapping(value = "/restaurant/{restaurantId}/label",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Label> createLabel(@Valid @RequestBody Label label,
+    public ResponseEntity<Label> createRestaurantLabel(@Valid @RequestBody Label label,
                                              @PathVariable Long restaurantId) throws URISyntaxException {
 
         Label result = labelService.save(label, restaurantId);
@@ -81,6 +81,21 @@ public class RestaurantController {
         Restaurant result = restaurantService.save(restaurant);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert("restaurant", restaurant.getId().toString()))
+                .body(result);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/restaurant/{restaurantId}/label/{labelId}",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Label> updateRestaurantLabel(@PathVariable Long restaurantId, @PathVariable Long labelId, @Valid @RequestBody Label label) throws URISyntaxException {
+        Label oldLabel = labelService.findOne(labelId);
+        if (oldLabel == null) {
+            return createRestaurantLabel(label, restaurantId);
+        }
+        Label result = labelService.save(label, restaurantId);
+        return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert("label", label.getId().toString()))
                 .body(result);
     }
 
@@ -108,6 +123,13 @@ public class RestaurantController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @RequestMapping(value = "/restaurant/{restauranId}/label",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Label> getRestaurantLabels(@PathVariable Long restauranId) {
+        return labelService.findByRestaurant(restauranId);
+    }
+
     /**
      * DELETE  /restaurants/:id -> delete the "id" restaurant.
      */
@@ -118,6 +140,15 @@ public class RestaurantController {
     public ResponseEntity<Void> deleteRestaurant(@PathVariable Long id) {
         restaurantService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("restaurant", id.toString())).build();
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/restaurant/{restaurantId}/label/{labelId}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deleteRestaurantLabel(@PathVariable Long restaurantId, @PathVariable Long labelId) {
+        labelService.delete(restaurantId, labelId);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("label", labelId.toString())).build();
     }
 
 }

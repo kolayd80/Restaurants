@@ -2,10 +2,11 @@ package com.restaurant.service;
 
 import com.restaurant.domain.Restaurant;
 import com.restaurant.repository.RestaurantRepository;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -19,7 +20,9 @@ public class RestaurantService {
 
     public Restaurant save(Restaurant restaurant) {
         //restaurant.setTotalrating(Math.rint(100.0*(0.4*restaurant.getKitchenrating()+0.3*restaurant.getServicerating()+0.3*restaurant.getInteriorrating())) / 100.0);
-        restaurant.setAddingDate(new DateTime());
+        if (restaurant.getCreatedDate()==null) {
+            restaurant.setCreatedDate(LocalDateTime.now());
+        }
         return restaurantRepository.save(restaurant);
     }
 

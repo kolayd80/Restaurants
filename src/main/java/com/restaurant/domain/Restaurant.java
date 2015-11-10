@@ -1,17 +1,15 @@
 package com.restaurant.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Type;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import org.joda.time.DateTime;
+
 
 @Entity
 @Table(name = "restaurant")
@@ -36,11 +34,8 @@ public class Restaurant implements Serializable {
     @Column(name = "longitude")
     private Double longitude;
 
-    @Column(name = "adding_date")
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "yyyy/MM/dd:HH:mm:ss")
-    @JsonFormat(pattern = "yyyy/MM/dd:HH:mm:ss")
-    private DateTime addingDate;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<Photo> photos = new HashSet<>();
@@ -126,12 +121,12 @@ public class Restaurant implements Serializable {
         this.labels = labels;
     }
 
-    public DateTime getAddingDate() {
-        return addingDate;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setAddingDate(DateTime addingDate) {
-        this.addingDate = addingDate;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Rating getRating() {

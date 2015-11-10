@@ -1,13 +1,11 @@
 package com.restaurant.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-import org.springframework.format.annotation.DateTimeFormat;
+
+
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,10 +21,7 @@ public class Chain implements Serializable {
     private String name;
 
     @Column(name = "adding_date")
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @DateTimeFormat(pattern = "yyyy/MM/dd:HH:mm:ss")
-    @JsonFormat(pattern = "yyyy/MM/dd:HH:mm:ss")
-    private DateTime addingDate;
+    private LocalDateTime addingDate;
 
     @OneToOne(mappedBy = "chain", cascade = CascadeType.ALL)
     private Review review;
@@ -59,11 +54,11 @@ public class Chain implements Serializable {
         this.name = name;
     }
 
-    public DateTime getAddingDate() {
+    public LocalDateTime getAddingDate() {
         return addingDate;
     }
 
-    public void setAddingDate(DateTime addingDate) {
+    public void setAddingDate(LocalDateTime addingDate) {
         this.addingDate = addingDate;
     }
 
