@@ -47,60 +47,60 @@
         </div>
 
 
-        <!--<div class="form-group">-->
-            <!--<label for="field_kitchenrating">Kitchen rating</label>-->
-            <!--<input type="number" class="form-control" name="kitchenrating" id="field_kitchenrating"-->
-                   <!--ng-model="restaurant.kitchenrating"-->
-                   <!--required>-->
+        <div class="form-group">
+            <label for="field_kitchenrating">Kitchen rating</label>
+            <input type="number" class="form-control" name="kitchenrating" id="field_kitchenrating"
+                   ng-model="rating.kitchen"
+                   required>
 
-            <!--<div ng-show="editForm.kitchenrating.$invalid">-->
-                <!--<p class="help-block"-->
-                   <!--ng-show="editForm.kitchenrating.$error.required">-->
-                    <!--This field is required.-->
-                <!--</p>-->
+            <div ng-show="editForm.kitchenrating.$invalid">
+                <p class="help-block"
+                   ng-show="editForm.kitchenrating.$error.required">
+                    This field is required.
+                </p>
 
-                <!--<p class="help-block"-->
-                   <!--ng-show="editForm.kitchenrating.$error.number">-->
-                    <!--This field should be a number.-->
-                <!--</p>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-            <!--<label for="field_interiorrating">Interior rating</label>-->
-            <!--<input type="number" class="form-control" name="interiorrating" id="field_interiorrating"-->
-                   <!--ng-model="restaurant.interiorrating"-->
-                   <!--required>-->
+                <p class="help-block"
+                   ng-show="editForm.kitchenrating.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="field_interiorrating">Interior rating</label>
+            <input type="number" class="form-control" name="interiorrating" id="field_interiorrating"
+                   ng-model="rating.interior"
+                   required>
 
-            <!--<div ng-show="editForm.interiorrating.$invalid">-->
-                <!--<p class="help-block"-->
-                   <!--ng-show="editForm.interiorrating.$error.required">-->
-                    <!--This field is required.-->
-                <!--</p>-->
+            <div ng-show="editForm.interiorrating.$invalid">
+                <p class="help-block"
+                   ng-show="editForm.interiorrating.$error.required">
+                    This field is required.
+                </p>
 
-                <!--<p class="help-block"-->
-                   <!--ng-show="editForm.interiorrating.$error.number">-->
-                    <!--This field should be a number.-->
-                <!--</p>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-            <!--<label for="field_servicerating">Service rating</label>-->
-            <!--<input type="number" class="form-control" name="servicerating" id="field_servicerating"-->
-                   <!--ng-model="restaurant.servicerating"-->
-                   <!--required>-->
+                <p class="help-block"
+                   ng-show="editForm.interiorrating.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="field_servicerating">Service rating</label>
+            <input type="number" class="form-control" name="servicerating" id="field_servicerating"
+                   ng-model="rating.service"
+                   required>
 
-            <!--<div ng-show="editForm.servicerating.$invalid">-->
-                <!--<p class="help-block"-->
-                   <!--ng-show="editForm.servicerating.$error.required">-->
-                    <!--This field is required.-->
-                <!--</p>-->
+            <div ng-show="editForm.servicerating.$invalid">
+                <p class="help-block"
+                   ng-show="editForm.servicerating.$error.required">
+                    This field is required.
+                </p>
 
-                <!--<p class="help-block"-->
-                   <!--ng-show="editForm.interiorrating.$error.number">-->
-                    <!--This field should be a number.-->
-                <!--</p>-->
-            <!--</div>-->
-        <!--</div>-->
+                <p class="help-block"
+                   ng-show="editForm.interiorrating.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
         <div id="mapContainer"></div>
 
     </div>

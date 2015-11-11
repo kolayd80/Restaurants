@@ -74,6 +74,12 @@ app.factory("Review", function ($resource) {
     });
 });
 
+app.factory("Rating", function ($resource) {
+    return $resource('/api/restaurant/:restaurantId/rating/:ratingId', {restaurantId:"@restaurantId", ratingId: "@ratingId"}, {
+        update: {method:'PUT'},
+    });
+});
+
 app.factory("LoginService", function ($resource) {
     return $resource(':action', {},
         {
@@ -86,7 +92,7 @@ app.factory("LoginService", function ($resource) {
     );
 });
 
-app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label, Review) {
+app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label, Review, Rating) {
 
     function init() {
         var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function(){
@@ -111,21 +117,25 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
                 draggable: true,
                 title: itemRestaurant.name
             });
-            var kitchenrating = $scope.restaurant.kitchenrating;
-            var kitchen_star_width = kitchenrating*16 + Math.ceil(kitchenrating);
-            $('#rating_votes').width(kitchen_star_width);
-            var interiorrating = $scope.restaurant.interiorrating;
-            var interior_star_width = interiorrating*16 + Math.ceil(interiorrating);
-            $('#interior_votes').width(interior_star_width);
-            var servicerating = $scope.restaurant.servicerating;
-            var service_star_width = servicerating*16 + Math.ceil(servicerating);
-            $('#service_votes').width(service_star_width);
+
         });
         $scope.restaurant = itemRestaurant;
 
         $scope.labels = Label.query({"restaurantId": $routeParams.id});
 
         $scope.review = Review.get({"restaurantId": $routeParams.id});
+
+        $scope.rating = Rating.get({"restaurantId": $routeParams.id});
+
+        var kitchenrating = $scope.rating.kitchen;
+        var kitchen_star_width = kitchenrating*16 + Math.ceil(kitchenrating);
+        $('#rating_votes').width(kitchen_star_width);
+        var interiorrating = $scope.rating.interior;
+        var interior_star_width = interiorrating*16 + Math.ceil(interiorrating);
+        $('#interior_votes').width(interior_star_width);
+        var servicerating = $scope.rating.service;
+        var service_star_width = servicerating*16 + Math.ceil(servicerating);
+        $('#service_votes').width(service_star_width);
 
         // Set of Photos
         $scope.slides = Photo.query({"id": $routeParams.id});
@@ -203,11 +213,19 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
                     };
                 };
             });
+
             var review = new Review($scope.review);
             if($scope.review.id==null|undefined) {
                 review.$save({"restaurantId":restaurant.id});
             } else {
                 review.$update({"restaurantId":restaurant.id, "reviewId":$scope.review.id});
+            };
+
+            var rating = new Rating($scope.rating);
+            if($scope.rating.id==null|undefined) {
+                rating.$save({"restaurantId":restaurant.id});
+            } else {
+                rating.$update({"restaurantId":restaurant.id, "ratingId":$scope.rating.id});
             };
         });
         document.location="#/list";
@@ -217,7 +235,7 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
 
 });
 
-app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, Review) {
+app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, Review, Rating) {
 
     function init() {
         function errorNavigator(err) {
@@ -265,6 +283,13 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
             content: "",
             restaurant: null
         };
+        $scope.rating = {
+            id: null,
+            kitchen: 0,
+            interior: 0,
+            service: 0,
+            restaurant: null
+        };
     }
 
     $scope.deleteLabel = function(label) {
@@ -288,8 +313,12 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
                 var label = new Label($scope.labels[i]);
                 label.$save({"restaurantId":restaurant.id});
             };
+
             var review = new Review($scope.review);
             review.$save({"restaurantId":restaurant.id});
+
+            var rating = new Rating($scope.rating);
+            rating.$save({"restaurantId":restaurant.id});
         });
 
 
