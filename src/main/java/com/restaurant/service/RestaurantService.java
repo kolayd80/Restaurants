@@ -1,13 +1,25 @@
 package com.restaurant.service;
 
-import com.restaurant.domain.Restaurant;
+
+import com.restaurant.domain.*;
 import com.restaurant.repository.RestaurantRepository;
+import com.restaurant.service.util.JsonReader;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
+import java.io.IOException;
+
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.google.common.collect.Maps;
 
 /**
  * Created by Nikolay on 09.10.2015.
@@ -18,10 +30,20 @@ public class RestaurantService {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
+    @Autowired
+    private AddressService addressService;
+
     public Restaurant save(Restaurant restaurant) {
         //restaurant.setTotalrating(Math.rint(100.0*(0.4*restaurant.getKitchenrating()+0.3*restaurant.getServicerating()+0.3*restaurant.getInteriorrating())) / 100.0);
         if (restaurant.getCreatedDate()==null) {
             restaurant.setCreatedDate(LocalDateTime.now());
+        }
+        try {
+            geoDecoding(restaurant);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return restaurantRepository.save(restaurant);
     }
@@ -41,6 +63,59 @@ public class RestaurantService {
 
     public void delete(Long id) {
         restaurantRepository.delete(id);
+    }
+
+    public void geoDecoding(Restaurant restaurant) throws IOException, JSONException {
+        final String baseUrl = "http://maps.googleapis.com/maps/api/geocode/json";
+        final Map<String, String> params = Maps.newHashMap();
+        params.put("language", "en");
+        params.put("sensor", "false");
+        params.put("latlng", restaurant.getLatitude().toString()+","+restaurant.getLongitude().toString());
+        final String url = baseUrl + '?' + AbstractGeo.encodeParams(params);
+        final JSONObject response = JsonReader.read(url);
+        final JSONObject location = response.getJSONArray("results").getJSONObject(0);
+        restaurant.setAddress(location.getString("formatted_address"));
+
+        final JSONArray addressComponents = location.getJSONArray("address_components");
+
+        for (int numComponent=0; numComponent<addressComponents.length(); numComponent++) {
+            JSONObject addressComponent = addressComponents.getJSONObject(addressComponents.length() - numComponent - 1);
+            if (addressComponent.getString("types").indexOf("street_number")>0) {
+                restaurant.setStreetAddress(addressComponent.getString("short_name"));
+            } else if (addressComponent.getString("types").indexOf("route")>0) {
+                String locationStreet = addressComponent.getString("short_name");
+                Street street = addressService.findStreetByName(locationStreet, restaurant.getSublocality());
+                if (street==null) {
+                    restaurant.setStreet(addressService.saveStreet(locationStreet, restaurant.getSublocality()));
+                } else {
+                    restaurant.setStreet(street);
+                }
+            } else if (addressComponent.getString("types").indexOf("sublocality")>0) {
+                String locationSublocality = addressComponent.getString("short_name");
+                Sublocality sublocality = addressService.findSublocalityByName(locationSublocality, restaurant.getLocality());
+                if (sublocality==null) {
+                    restaurant.setSublocality(addressService.saveSublocality(locationSublocality, restaurant.getLocality()));
+                } else {
+                    restaurant.setSublocality(sublocality);
+                }
+            } else if (addressComponent.getString("types").indexOf("locality")>0) {
+                String locationLocality = addressComponent.getString("short_name");
+                Locality locality = addressService.findLocalityByName(locationLocality, restaurant.getCountry());
+                if (locality==null) {
+                    restaurant.setLocality(addressService.saveLocality(locationLocality, restaurant.getCountry()));
+                } else {
+                    restaurant.setLocality(locality);
+                }
+            } else if (addressComponent.getString("types").indexOf("country")>0) {
+                String locationCountry = addressComponent.getString("long_name");
+                Country country = addressService.findCountryByName(locationCountry);
+                if (country==null) {
+                    restaurant.setCountry(addressService.saveCountry(locationCountry));
+                } else {
+                    restaurant.setCountry(country);
+                }
+            }
+        }
     }
 
 }

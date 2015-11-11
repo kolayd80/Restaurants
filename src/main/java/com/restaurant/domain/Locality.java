@@ -1,5 +1,7 @@
 package com.restaurant.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,9 +21,11 @@ public class Locality {
     private Country country;
 
     @OneToMany(mappedBy = "locality", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Sublocality> sublocalities = new HashSet<>();
 
     @OneToMany(mappedBy = "locality")
+    @JsonIgnore
     private Set<Restaurant> restaurants = new HashSet<>();
 
     public Long getId() {
