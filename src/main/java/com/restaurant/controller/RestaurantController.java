@@ -64,7 +64,7 @@ public class RestaurantController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-     @RequestMapping(value = "/restaurant/{restaurantId}/label",
+    @RequestMapping(value = "/restaurant/{restaurantId}/label",
              method = RequestMethod.POST,
              produces = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<Label> createRestaurantLabel(@Valid @RequestBody Label label,

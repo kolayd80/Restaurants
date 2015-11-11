@@ -1,5 +1,6 @@
 package com.restaurant.service;
 
+import com.restaurant.domain.Chain;
 import com.restaurant.domain.Restaurant;
 import com.restaurant.domain.Review;
 import com.restaurant.domain.ReviewType;
@@ -16,8 +17,15 @@ public class ReviewService {
     @Autowired
     private RestaurantService restaurantService;
 
+    @Autowired
+    private ChainService chainService;
+
     public Review findByRestaurant(Long restaurantId) {
         return reviewRepository.findByRestaurant(restaurantService.findOne(restaurantId));
+    }
+
+    public Review findByChain(Long chainId) {
+        return reviewRepository.findByChain(chainService.findOne(chainId));
     }
 
     public Review findOne(Long reviewId) {
@@ -31,4 +39,10 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
+    public Review saveForChain(Review review, Long chainId) {
+        Chain chain = chainService.findOne(chainId);
+        review.setChain(chain);
+        review.setReviewType(ReviewType.CHAIN);
+        return reviewRepository.save(review);
+    }
 }

@@ -80,6 +80,30 @@ app.factory("Rating", function ($resource) {
     });
 });
 
+app.factory("Chain", function ($resource) {
+    return $resource('/api/chain/:id', {id: "@id"}, {
+        update: {method:'PUT'},
+    });
+});
+
+app.factory("CLabel", function ($resource) {
+    return $resource('/api/chain/:chainId/label/:labelId', {chainId:"@chainId", labelId: "@labelid"}, {
+        update: {method:'PUT'},
+    });
+});
+
+app.factory("CReview", function ($resource) {
+    return $resource('/api/chain/:chainId/review/:reviewId', {chainId:"@chainId", reviewId: "@reviewId"}, {
+        update: {method:'PUT'},
+    });
+});
+
+app.factory("CRating", function ($resource) {
+    return $resource('/api/chain/:chainId/rating/:ratingId', {chainId:"@chainId", ratingId: "@ratingId"}, {
+        update: {method:'PUT'},
+    });
+});
+
 app.factory("LoginService", function ($resource) {
     return $resource(':action', {},
         {
@@ -433,7 +457,155 @@ app.controller("LoginCtrl", function ($scope, $rootScope, $location, $http, $coo
 
 });
 
+app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CLabel, CReview, CRating) {
 
+    function init() {
+        $scope.chain = Chain.get({"id": $routeParams.id});
+
+        $scope.labels = CLabel.query({"chainId": $routeParams.id});
+
+        $scope.review = CReview.get({"chainId": $routeParams.id});
+
+
+
+
+
+        // Set of Photos
+        //$scope.slides = Photo.query({"id": $routeParams.id});
+
+
+
+    }
+
+    //$scope.uploadPhoto = function () {
+    //    return $http({
+    //        method: 'POST',
+    //        url: '/api/photo/upload',
+    //        headers: {
+    //            'Content-Type': undefined
+    //        },
+    //        data: {
+    //            file: file.files[0],
+    //            idRestaurant: $scope.restaurant.id
+    //        },
+    //        transformRequest: function(data) {
+    //            var fd = new FormData();
+    //            angular.forEach(data, function(value, key) {
+    //                fd.append(key, value);
+    //            });
+    //            return fd;
+    //        }
+    //    });
+    //};
+
+    $scope.deleteLabel = function(label) {
+        $scope.labels.splice($scope.labels.indexOf(label), 1);
+    }
+
+    $scope.addLabel = function() {
+        $scope.labels.push({
+            id: null,
+            name: "",
+            chain: Chain
+        });
+    }
+
+    $scope.saveChain = function () {
+        var chain = new Chain($scope.chain);
+        chain.$update({}, function(){
+            var savedLabels = CLabel.query({"chainId": chain.id}, function(){
+                for (var indLabel in savedLabels) {
+                    if(isNaN(indLabel)){
+                        continue;
+                    };
+                    var foundLabel = false;
+                    for (var i in $scope.labels) {
+                        if(isNaN(i)){
+                            continue;
+                        };
+                        if(savedLabels[indLabel].id==$scope.labels[i].id) {
+                            foundLabel = true;
+                            break;
+                        };
+                    };
+                    if(!foundLabel) {
+                        Label.delete({"chainId":chain.id, "labelId":savedLabels[indLabel].id});
+                    };
+                };
+                for (var i in $scope.labels) {
+                    if(isNaN(i)){
+                        continue;
+                    };
+                    var label = new CLabel($scope.labels[i]);
+                    if($scope.labels[i].id==null) {
+                        label.$save({"chainId":chain.id});
+                    } else {
+                        label.$update({"chainId":chain.id, "labelId":$scope.labels[i].id});
+                    };
+                };
+            });
+
+            var review = new CReview($scope.review);
+            if($scope.review.id==null|undefined) {
+                review.$save({"chainId":chain.id});
+            } else {
+                review.$update({"chainId":chain.id, "reviewId":$scope.review.id});
+            };
+
+
+        });
+        document.location="#/list";
+    };
+
+    init();
+
+});
+
+app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview, CRating) {
+
+    function init() {
+
+        $scope.labels = [];
+        $scope.review = {
+            id: null,
+            content: "",
+            chain: null
+        };
+
+    }
+
+    $scope.deleteLabel = function(Clabel) {
+        $scope.labels.splice($scope.labels.indexOf(label), 1);
+    }
+
+    $scope.addLabel = function() {
+        $scope.labels.push({
+            id: null,
+            name: "",
+            chain: Chain
+        });
+    }
+
+    $scope.saveChain = function () {
+        var chain = new Chain($scope.chain);
+        chain.$save({}, function(){
+            for (var i in $scope.labels) {
+                var label = new CLabel($scope.labels[i]);
+                label.$save({"chainId":chain.id});
+            };
+
+            var review = new CReview($scope.review);
+            review.$save({"chainId":chain.id});
+
+        });
+
+
+        document.location="#/list";
+    };
+
+    init();
+
+});
 
 
 

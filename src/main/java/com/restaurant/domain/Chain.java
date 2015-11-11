@@ -3,6 +3,8 @@ package com.restaurant.domain;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,18 +26,22 @@ public class Chain implements Serializable {
     private LocalDateTime createdDate;
 
     @OneToOne(mappedBy = "chain", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Review review;
 
     @OneToOne(mappedBy = "chain", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Rating rating;
 
     @OneToMany(mappedBy = "chain", cascade = CascadeType.ALL)
     private Set<Photo> photos = new HashSet<>();
 
     @OneToMany(mappedBy = "chain", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Label> labels = new HashSet<>();
 
     @OneToMany(mappedBy = "chain", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Restaurant> restaurants = new HashSet<>();
 
     public Long getId() {

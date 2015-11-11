@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="myRestaurantLabel" >{{["Add","Edit"][(chain.id>0)+0]}} chain</h4>
+</div>
+
+<form >
+
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+
+        <div class="form-group">
+            <label for="field_name">Name</label>
+            <input type="text" class="form-control" name="name" id="field_name"
+                   ng-model="chain.name"
+                    >
+        </div>
+
+        <div ng-repeat="label in labels">
+            <input type="text" ng-model="label.name">
+            <a ng-click="deleteLabel(label)">X</a>
+        </div>
+        <button ng-click="addLabel()">New Label</button>
+
+        <div class="form-textarea-group">
+            <label for="field_review">Review</label>
+            <textarea rows="6" class="form-control" name="review" id="field_review"
+                      ng-model="review.content">
+
+            </textarea>
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+        <div class="btns">
+            <a href="#/list"> <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+            </button></a>
+            <button ng-click="saveChain()" type="submit" ng-disabled="editForm.$invalid || editForm.$submitted" class="btn btn-primary">
+                <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+            </button>
+        </div>
+    </div>
+</form>

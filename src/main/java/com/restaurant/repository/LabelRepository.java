@@ -1,5 +1,6 @@
 package com.restaurant.repository;
 
+import com.restaurant.domain.Chain;
 import com.restaurant.domain.Label;
 import com.restaurant.domain.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ import java.util.List;
 public interface LabelRepository extends JpaRepository<Label, Long> {
 
     List<Label> findByRestaurant(@Param("restaurant")Restaurant restaurant);
+
+    List<Label> findByChain(@Param("chain")Chain chain);
 
 }
