@@ -116,7 +116,7 @@ app.factory("LoginService", function ($resource) {
     );
 });
 
-app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label, Review, Rating) {
+app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label, Review, Rating, Chain) {
 
     function init() {
         var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function(){
@@ -142,6 +142,8 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
                 title: itemRestaurant.name
             });
 
+
+
         });
         $scope.restaurant = itemRestaurant;
 
@@ -164,9 +166,15 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
         // Set of Photos
         $scope.slides = Photo.query({"id": $routeParams.id});
 
+        $scope.itemsList = Chain.query();
 
 
     }
+
+    $scope.forceClearChain = function () {
+        $scope.restaurant.chain = null;
+    }
+
 
     $scope.uploadPhoto = function () {
         return $http({
@@ -259,7 +267,7 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
 
 });
 
-app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, Review, Rating) {
+app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, Review, Rating, Chain) {
 
     function init() {
         function errorNavigator(err) {
@@ -314,6 +322,13 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
             service: 0,
             restaurant: null
         };
+
+        $scope.itemsList = Chain.query();
+
+    }
+
+    $scope.forceClearChain = function () {
+        $scope.restaurant.chain = null;
     }
 
     $scope.deleteLabel = function(label) {
@@ -606,6 +621,8 @@ app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview, 
     init();
 
 });
+
+
 
 
 

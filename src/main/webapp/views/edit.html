@@ -41,7 +41,7 @@
         <div class="form-textarea-group">
             <label for="field_review">Review</label>
             <textarea rows="6" class="form-control" name="review" id="field_review"
-                   ng-model="review.content">
+                      ng-model="review.content">
 
             </textarea>
         </div>
@@ -101,6 +101,13 @@
                 </p>
             </div>
         </div>
+        <div id="chooseChain">
+            <label for="select_chain">Chain</label>
+            <select id="select_chain" ng-model="restaurant.chain"
+                    ng-options="v as v.name for v in itemsList track by v.id">
+            </select>
+            <button ng-click="forceClearChain()">Clear chain</button><br>
+        </div>
         <div id="mapContainer"></div>
 
         <div class="form-group">
@@ -143,12 +150,12 @@
     </div>
     <div class="modal-footer">
         <div class="btns">
-        <a href="#/list"> <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
-            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
-        </button></a>
-        <button ng-click="saveRestaurant()" type="submit" ng-disabled="editForm.$invalid || editForm.$submitted" class="btn btn-primary">
-            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
-        </button>
+            <a href="#/list"> <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+            </button></a>
+            <button ng-click="saveRestaurant()" type="submit" ng-disabled="editForm.$invalid || editForm.$submitted" class="btn btn-primary">
+                <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+            </button>
         </div>
     </div>
 </form>

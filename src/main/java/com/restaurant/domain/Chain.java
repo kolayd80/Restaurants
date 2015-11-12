@@ -34,6 +34,7 @@ public class Chain implements Serializable {
     private Rating rating;
 
     @OneToMany(mappedBy = "chain", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
     @OneToMany(mappedBy = "chain", cascade = CascadeType.ALL)

@@ -40,6 +40,7 @@ public class Restaurant implements Serializable {
     private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant")
