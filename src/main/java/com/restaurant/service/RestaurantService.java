@@ -33,8 +33,11 @@ public class RestaurantService {
     @Autowired
     private AddressService addressService;
 
+    @Autowired
+    private RatingService ratingService;
+
     public Restaurant save(Restaurant restaurant) {
-        //restaurant.setTotalrating(Math.rint(100.0*(0.4*restaurant.getKitchenrating()+0.3*restaurant.getServicerating()+0.3*restaurant.getInteriorrating())) / 100.0);
+
         if (restaurant.getCreatedDate()==null) {
             restaurant.setCreatedDate(LocalDateTime.now());
         }
@@ -45,11 +48,27 @@ public class RestaurantService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return restaurantRepository.save(restaurant);
+
+        Chain oldChain = null;
+        if (restaurant.getId()!=null) {
+            oldChain = restaurantRepository.findOne(restaurant.getId()).getChain();
+        }
+
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+
+        if (oldChain!=null) {
+            ratingService.setRatingForChain(oldChain);
+        }
+
+        return savedRestaurant;
     }
 
     public List<Restaurant> findAll() {
         return restaurantRepository.findAll();
+    }
+
+    public List<Restaurant> findByChain(Chain chain) {
+        return restaurantRepository.findByChain(chain);
     }
 
     public List<Restaurant> findOrderByTotalratingDesc() {

@@ -1,5 +1,6 @@
 package com.restaurant.repository;
 
+import com.restaurant.domain.Chain;
 import com.restaurant.domain.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,5 +12,7 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     //List<Restaurant> findByOrderByTotalratingDesc();
+
+    List<Restaurant> findByChain(Chain chain);
 
 }

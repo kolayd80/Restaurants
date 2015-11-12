@@ -20,17 +20,23 @@ public class Rating {
     @OneToOne
     private Chain chain;
 
-    @NotNull
-    @Column(name = "kitchen", nullable = false)
+    @Column(name = "kitchen")
     private Integer kitchen;
 
-    @NotNull
-    @Column(name = "interior", nullable = false)
+    @Column(name = "interior")
     private Integer interior;
 
-    @NotNull
-    @Column(name = "service", nullable = false)
+    @Column(name = "service")
     private Integer service;
+
+    @Column(name = "kitchen_chain")
+    private Double kitchenChain;
+
+    @Column(name = "interior_chain")
+    private Double interiorChain;
+
+    @Column(name = "service_chain")
+    private Double serviceChain;
 
     @Column(name = "total")
     private Double total;
@@ -97,5 +103,29 @@ public class Rating {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Double getKitchenChain() {
+        return kitchenChain;
+    }
+
+    public void setKitchenChain(Double kitchenChain) {
+        this.kitchenChain = kitchenChain;
+    }
+
+    public Double getInteriorChain() {
+        return interiorChain;
+    }
+
+    public void setInteriorChain(Double interiorChain) {
+        this.interiorChain = interiorChain;
+    }
+
+    public Double getServiceChain() {
+        return serviceChain;
+    }
+
+    public void setServiceChain(Double serviceChain) {
+        this.serviceChain = serviceChain;
     }
 }
