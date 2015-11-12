@@ -2,6 +2,24 @@
     <h4 class="modal-title" id="myRestaurantLabel" >{{["Add","Edit"][(chain.id>0)+0]}} chain</h4>
 </div>
 
+<div class="container">
+    <div class="offsetspan6">
+        <uib-carousel interval=100000>
+            <uib-slide ng-repeat="slide in slides" active="slide.active">
+                <img class="image-circle" ng-src="{{slide.name}}"    style="margin:auto;"/>
+                <div class="carousel-caption">
+                    <p>{{slide.review}}</p>
+                </div>
+
+            </uib-slide>
+        </uib-carousel>
+    </div>
+</div>
+<form class="btns"  ng-submit="uploadPhoto()" ng-show="(chain.id>0)+0">
+    <input type="file" name="file" ng-model="file" id="file"><br />
+    <input type="submit" value="Upload file">
+</form>
+
 <form >
 
     <div class="modal-body">

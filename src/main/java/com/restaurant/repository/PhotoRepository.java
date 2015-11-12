@@ -1,5 +1,6 @@
 package com.restaurant.repository;
 
+import com.restaurant.domain.Chain;
 import com.restaurant.domain.Photo;
 import com.restaurant.domain.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     List<Photo> findByRestaurant(@Param("restaurant")Restaurant restaurant);
 
-}
+    List<Photo> findByChain(@Param("chain")Chain chain);
+
+        }

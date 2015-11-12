@@ -33,6 +33,13 @@ public class PhotoController {
         return photoService.findPhoto(id);
     }
 
+    @RequestMapping(value = "/chain/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Photo> getChainPhoto(@PathVariable Long id){
+        return photoService.findPhotoByChain(id);
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value="/upload", method=RequestMethod.POST)
     public void handleFileUpload(@RequestParam("file") MultipartFile file,
@@ -55,6 +62,37 @@ public class PhotoController {
                 stream.close();
 
                 photoService.save(restaurantId, name);
+
+            } catch (Exception e) {
+                //return "You failed to upload " + name + " => " + e.getMessage();
+            }
+        } else {
+            //return "You failed to upload " + name + " because the file was empty.";
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value="/chain/upload", method=RequestMethod.POST)
+    public void handleFileUploadForChain(@RequestParam("file") MultipartFile file,
+                                 @RequestParam("idChain") Long chainId) throws IOException {
+
+
+//        Map uploadResult = Singleton.getCloudinary().uploader().upload(file.getBytes(),
+//                ObjectUtils.asMap("resource_type", "auto"));
+//        photoService.save(chainId, (String) uploadResult.get("url"));
+
+        String name = "src/main/webapp/photo/";
+        UUID fileUuid = UUID.randomUUID();
+        name = name+fileUuid+".jpg";
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File(name)));
+                stream.write(bytes);
+                stream.close();
+
+                photoService.saveForChain(chainId, name);
 
             } catch (Exception e) {
                 //return "You failed to upload " + name + " => " + e.getMessage();

@@ -104,6 +104,12 @@ app.factory("CRating", function ($resource) {
     });
 });
 
+app.factory("CPhoto", function ($resource) {
+    return $resource('/api/photo/chain/:id', {id: "@id"}, {
+        query: {method:'GET', isArray:true},
+    });
+});
+
 app.factory("LoginService", function ($resource) {
     return $resource(':action', {},
         {
@@ -472,7 +478,7 @@ app.controller("LoginCtrl", function ($scope, $rootScope, $location, $http, $coo
 
 });
 
-app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CLabel, CReview, CRating) {
+app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CLabel, CReview, CRating, CPhoto) {
 
     function init() {
         $scope.chain = Chain.get({"id": $routeParams.id});
@@ -481,37 +487,30 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CL
 
         $scope.review = CReview.get({"chainId": $routeParams.id});
 
-
-
-
-
-        // Set of Photos
-        //$scope.slides = Photo.query({"id": $routeParams.id});
-
-
+        $scope.slides = CPhoto.query({"id": $routeParams.id});
 
     }
 
-    //$scope.uploadPhoto = function () {
-    //    return $http({
-    //        method: 'POST',
-    //        url: '/api/photo/upload',
-    //        headers: {
-    //            'Content-Type': undefined
-    //        },
-    //        data: {
-    //            file: file.files[0],
-    //            idRestaurant: $scope.restaurant.id
-    //        },
-    //        transformRequest: function(data) {
-    //            var fd = new FormData();
-    //            angular.forEach(data, function(value, key) {
-    //                fd.append(key, value);
-    //            });
-    //            return fd;
-    //        }
-    //    });
-    //};
+    $scope.uploadPhoto = function () {
+        return $http({
+            method: 'POST',
+            url: '/api/photo/chain/upload',
+            headers: {
+                'Content-Type': undefined
+            },
+            data: {
+                file: file.files[0],
+                idChain: $scope.chain.id
+            },
+            transformRequest: function(data) {
+                var fd = new FormData();
+                angular.forEach(data, function(value, key) {
+                    fd.append(key, value);
+                });
+                return fd;
+            }
+        });
+    };
 
     $scope.deleteLabel = function(label) {
         $scope.labels.splice($scope.labels.indexOf(label), 1);
