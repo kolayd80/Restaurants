@@ -79,4 +79,8 @@ public class RatingService {
         return ratingRepository.save(chainRating);
 
     }
+
+    public List<Rating> findAllOrderByTotalRating() {
+        return ratingRepository.findByReviewTypeOrRestaurantChainOrderByTotalDesc(ReviewType.CHAIN, null);
+    }
 }

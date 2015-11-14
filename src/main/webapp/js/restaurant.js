@@ -110,6 +110,12 @@ app.factory("CPhoto", function ($resource) {
     });
 });
 
+app.factory("CommonRating", function ($resource) {
+    return $resource('/api/rating/:id', {id: "@id"}, {
+        update: {method:'PUT'},
+    });
+});
+
 app.factory("LoginService", function ($resource) {
     return $resource(':action', {},
         {
@@ -374,7 +380,7 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
 
 });
 
-app.controller("RestaurantsCtrl", function ($scope, Restaurant) {
+app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
 
     function init() {
         $scope.getRestaurants();
@@ -436,6 +442,7 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant) {
                     }
                 });
                 $scope.restaurants = listOfRestaurants;
+                $scope.ratings = CommonRating.query();
             }, errorNavigator)
         } else {
             alert("Geolocation API не поддерживается в вашем браузере");

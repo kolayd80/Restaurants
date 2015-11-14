@@ -21,37 +21,47 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="restaurant in restaurants">
+            <tr ng-repeat="rating in ratings">
                 <!--<td >{{restaurant.id}}</td>-->
 
-                <td ng-if="hasRole('ROLE_ADMIN')" style="width: 300px;" class="name"><a href="#/edit/{{restaurant.id}}">{{restaurant.name}}</a>
-                <span class="review">{{restaurant.label}}</span></td>
-                <td ng-if="!hasRole('ROLE_ADMIN')" style="width: 300px;" class="name"><a href="#/view/{{restaurant.id}}">{{restaurant.name}}</a>
-                    <span class="review">{{restaurant.label}}</span></td>
-               <td style="width: 300px;" class="totalrating">
-                   <span class="rating">Kitchen: {{restaurant.kitchenrating}}<br>
-                   Interior: {{restaurant.interiorrating}}<br>
-                   Service: {{restaurant.servicerating}}</span>
-                 {{restaurant.totalrating}}</td>
+
+                <td ng-if="hasRole('ROLE_ADMIN')&&rating.reviewType=='RESTAURANT'" style="width: 300px;" class="name"><a href="#/edit/{{rating.restaurant.id}}">{{rating.restaurant.name}}</a>
+                </td>
+                <td ng-if="!hasRole('ROLE_ADMIN')&&rating.reviewType=='RESTAURANT'" style="width: 300px;" class="name"><a href="#/view/{{rating.restaurant.id}}">{{rating.restaurant.name}}</a>
+                    </td>
+                <td ng-if="hasRole('ROLE_ADMIN')&&rating.reviewType!='RESTAURANT'" style="width: 300px;" class="name"><a href="#/editchain/{{rating.chain.id}}">{{rating.chain.name}}</a>
+                    </td>
+                <td ng-if="!hasRole('ROLE_ADMIN')&&rating.reviewType!='RESTAURANT'" style="width: 300px;" class="name"><a href="#/editchain/{{rating.chain.id}}">{{rating.chain.name}}</a>
+                    </td>
+               <td ng-if="rating.reviewType=='RESTAURANT'"style="width: 300px;" class="totalrating">
+                   <span class="rating">Kitchen: {{rating.kitchen}}<br>
+                   Interior: {{rating.interior}}<br>
+                   Service: {{rating.service}}</span>
+                 {{rating.total}}</td>
+                <td ng-if="rating.reviewType!='RESTAURANT'"style="width: 300px;" class="totalrating">
+                   <span class="rating">Kitchen: {{rating.kitchenChain}}<br>
+                   Interior: {{rating.interiorChain}}<br>
+                   Service: {{rating.serviceChain}}</span>
+                    {{rating.total}}</td>
                <!-- <td>{{restaurant.latitude}}</td>
                 <td>{{restaurant.longitude}}</td>-->
-                <td ng-show="hasRole('ROLE_ADMIN')">
+                <!--<td ng-show="hasRole('ROLE_ADMIN')">-->
+                    <!--&lt;!&ndash;<button type="submit"&ndash;&gt;-->
+                            <!--&lt;!&ndash;ui-sref="restaurant.detail({id:restaurant.id})"&ndash;&gt;-->
+                            <!--&lt;!&ndash;class="btn btn-info btn-sm">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                   <!--&lt;!&ndash; <button type="submit"-->
+                            <!--href="/edit/{{restaurant.id}}"-->
+                            <!--class="btn btn-primary btn-sm">-->
+                        <!--<span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>-->
+                    <!--</button>&ndash;&gt;-->
                     <!--<button type="submit"-->
-                            <!--ui-sref="restaurant.detail({id:restaurant.id})"-->
-                            <!--class="btn btn-info btn-sm">-->
-                        <!--<span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>-->
+                            <!--ng-click="deleteRestaurant(restaurant.id)"-->
+                            <!--class="btn btn-danger btn-sm">-->
+                        <!--<span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>-->
                     <!--</button>-->
-                   <!-- <button type="submit"
-                            href="/edit/{{restaurant.id}}"
-                            class="btn btn-primary btn-sm">
-                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
-                    </button>-->
-                    <button type="submit"
-                            ng-click="deleteRestaurant(restaurant.id)"
-                            class="btn btn-danger btn-sm">
-                        <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
-                    </button>
-                </td>
+                <!--</td>-->
             </tr>
             </tbody>
         </table>

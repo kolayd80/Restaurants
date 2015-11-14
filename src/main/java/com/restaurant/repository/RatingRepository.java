@@ -3,8 +3,11 @@ package com.restaurant.repository;
 import com.restaurant.domain.Chain;
 import com.restaurant.domain.Rating;
 import com.restaurant.domain.Restaurant;
+import com.restaurant.domain.ReviewType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 /**
  * Created by Nikolay on 09.11.2015.
@@ -14,5 +17,7 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
     Rating findByRestaurant(@Param("restaurant")Restaurant restaurant);
 
     Rating findByChain(@Param("chain")Chain chain);
+
+    List<Rating> findByReviewTypeOrRestaurantChainOrderByTotalDesc(@Param("review_type")ReviewType reviewType, @Param("restaurant.chain")Chain chain);
 
 }
