@@ -399,8 +399,7 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
             }
         }
 
-
-        if (navigator.geolocation) {
+        function initCoord(){
             navigator.geolocation.getCurrentPosition(function (position) {
                 var latitude = position.coords.latitude;
                 var longitude = position.coords.longitude;
@@ -418,7 +417,31 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                 mapOfRestaurants = new google.maps.Map(
                     document.getElementById("mapContainer"), mapOptions
                 );
+            }, function (err){
+                var latitude = 46.4879;
+                var longitude = 30.7409;
 
+                var coords = new google.maps.LatLng(latitude, longitude);
+                var mapOptions = {
+                    zoom: 15,
+                    center: coords,
+                    mapTypeControl: true,
+                    navigationControlOptions: {
+                        style: google.maps.NavigationControlStyle.SMALL
+                    },
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                mapOfRestaurants = new google.maps.Map(
+                    document.getElementById("mapContainer"), mapOptions
+                );
+            });
+
+        }
+
+
+        if (navigator.geolocation) {
+
+            initMap(initCoord(), function () {
                 var i;
                 for (i in markers) {
                     markers[i].setMap(null);
@@ -426,7 +449,7 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                 markers = [];
 
                 var re;
-                var listOfRestaurants = Restaurant.query(function(){
+                var listOfRestaurants = Restaurant.query(function () {
                     for (re in listOfRestaurants) {
                         var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
                         var newMarker = new google.maps.Marker({
@@ -434,16 +457,19 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                             map: mapOfRestaurants,
                             title: listOfRestaurants[re].name
                         });
-                        var markerUrl = 'index.html#/edit/'+listOfRestaurants[re].id;
-                        google.maps.event.addListener(newMarker, 'click', function(markerUrl) {
-                            return function() {document.location = markerUrl;}
+                        var markerUrl = 'index.html#/edit/' + listOfRestaurants[re].id;
+                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
+                            return function () {
+                                document.location = markerUrl;
+                            }
                         }(markerUrl));
                         markers.push(newMarker);
                     }
                 });
                 $scope.restaurants = listOfRestaurants;
                 $scope.ratings = CommonRating.query();
-            }, errorNavigator)
+            });
+
         } else {
             alert("Geolocation API не поддерживается в вашем браузере");
         }
