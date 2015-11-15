@@ -399,7 +399,7 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
             }
         }
 
-        function initCoord(){
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 var latitude = position.coords.latitude;
                 var longitude = position.coords.longitude;
@@ -434,14 +434,7 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                 mapOfRestaurants = new google.maps.Map(
                     document.getElementById("mapContainer"), mapOptions
                 );
-            });
-
-        }
-
-
-        if (navigator.geolocation) {
-
-            initMap(initCoord(), function () {
+            }, function () {
                 var i;
                 for (i in markers) {
                     markers[i].setMap(null);
@@ -470,13 +463,11 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                 $scope.ratings = CommonRating.query();
             });
 
+
         } else {
             alert("Geolocation API не поддерживается в вашем браузере");
         }
         ;
-
-
-
     };
 
     $scope.deleteRestaurant = function (id) {
