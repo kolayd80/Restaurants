@@ -149,6 +149,9 @@
 		<profile>
 			<id>develop</id>
 
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 
 			<build>
 				<resources>
@@ -162,9 +165,7 @@
 		<profile>
 			<id>release</id>
 
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
+
 
 			<build>
 				<resources>

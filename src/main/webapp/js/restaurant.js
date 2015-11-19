@@ -316,7 +316,30 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
                     draggable: true,
                     title: "Вы здесь"
                 });
-            }, errorNavigator)
+            }, function (err){
+                var itemLatitude = 46.4879;
+                var itemLongitude = 30.7409;
+
+                var coords = new google.maps.LatLng(itemLatitude, itemLongitude);
+                var mapOptions = {
+                    zoom: 15,
+                    center: coords,
+                    mapTypeControl: true,
+                    navigationControlOptions: {
+                        style: google.maps.NavigationControlStyle.SMALL
+                    },
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(
+                    document.getElementById("mapContainer"), mapOptions
+                );
+                marker = new google.maps.Marker({
+                    position: coords,
+                    map: map,
+                    draggable: true,
+                    title: ""
+                });
+            });
         } else {
             alert("Geolocation API не поддерживается в вашем браузере");
         }
