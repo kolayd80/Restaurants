@@ -6,7 +6,11 @@ import com.restaurant.domain.Review;
 import com.restaurant.domain.ReviewType;
 import com.restaurant.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class ReviewService {
@@ -33,6 +37,9 @@ public class ReviewService {
     }
 
     public Review save(Review review, Long restaurantId) {
+        if (review.getCreatedDate()==null) {
+            review.setCreatedDate(LocalDateTime.now());
+        }
         Restaurant restaurant = restaurantService.findOne(restaurantId);
         review.setRestaurant(restaurant);
         review.setReviewType(ReviewType.RESTAURANT);
@@ -40,9 +47,16 @@ public class ReviewService {
     }
 
     public Review saveForChain(Review review, Long chainId) {
+        if (review.getCreatedDate()==null) {
+            review.setCreatedDate(LocalDateTime.now());
+        }
         Chain chain = chainService.findOne(chainId);
         review.setChain(chain);
         review.setReviewType(ReviewType.CHAIN);
         return reviewRepository.save(review);
+    }
+
+    public Page<Review> findAll(Pageable pageable) {
+        return reviewRepository.findByReviewTypeOrRestaurantChain(ReviewType.CHAIN, null, pageable);
     }
 }

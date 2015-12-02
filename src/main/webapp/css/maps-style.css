@@ -20,14 +20,30 @@ body {
 	}
 
 #wrap{
-	width: 800px;	
-	margin: 0 auto;		
+	width: 800px;
+	margin: 0 auto;
 }
 
 #mapContainer {
 	margin: 2% auto;
 	position:relative;
-    height: 500px;
-    width: 1000px;
+	height: 800px;
+	width: 100%;
 	border:10px solid #eaeaea;	
+}
+
+#mapContainerWide {
+	border-top: 1px solid #bdb49f !important;
+	border-bottom: 1px solid #bdb49f !important;
+	background-color: transparent;
+	color: #543019;
+	border-color: #bdb49f;
+	margin: 2% auto;
+	padding: 0;
+	height: 400px;
+	position: relative;
+	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	transform: translateZ(0px);
 }

@@ -38,9 +38,7 @@ public class RestaurantService {
 
     public Restaurant save(Restaurant restaurant) {
 
-        if (restaurant.getCreatedDate()==null) {
-            restaurant.setCreatedDate(LocalDateTime.now());
-        }
+
         try {
             geoDecoding(restaurant);
         } catch (IOException e) {
@@ -82,6 +80,12 @@ public class RestaurantService {
 
     public void delete(Long id) {
         restaurantRepository.delete(id);
+    }
+
+    public void savePreview(Long id, String name) {
+        Restaurant restaurant = restaurantRepository.findOne(id);
+        restaurant.setPreviewImage(name.replace("src/main/webapp/", "http://localhost:8080/"));
+        restaurantRepository.save(restaurant);
     }
 
     public void geoDecoding(Restaurant restaurant) throws IOException, JSONException {

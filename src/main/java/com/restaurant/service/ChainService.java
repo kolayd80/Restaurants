@@ -18,10 +18,6 @@ public class ChainService {
 
     public Chain save(Chain chain) {
 
-        if (chain.getCreatedDate()==null) {
-            chain.setCreatedDate(LocalDateTime.now());
-        }
-
         return chainRepository.save(chain);
 
     }
@@ -32,6 +28,12 @@ public class ChainService {
 
     public List<Chain> findAll() {
         return chainRepository.findAll();
+    }
+
+    public void savePreview(Long id, String name) {
+        Chain chain = chainRepository.findOne(id);
+        chain.setPreviewImage(name.replace("src/main/webapp/", "http://localhost:8080/"));
+        chainRepository.save(chain);
     }
 
 }

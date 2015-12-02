@@ -36,8 +36,8 @@ public class Restaurant implements Serializable {
     @Column(name = "longitude")
     private Double longitude;
 
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
+    @Column(name = "preview_image")
+    private String previewImage;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -124,14 +124,6 @@ public class Restaurant implements Serializable {
         this.labels = labels;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
     public Rating getRating() {
         return rating;
     }
@@ -194,6 +186,14 @@ public class Restaurant implements Serializable {
 
     public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
+    }
+
+    public String getPreviewImage() {
+        return previewImage;
+    }
+
+    public void setPreviewImage(String previewImage) {
+        this.previewImage = previewImage;
     }
 
     @Override

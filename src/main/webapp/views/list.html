@@ -1,70 +1,42 @@
 <div>
-    <div class="table-responsive">
-        <div id="mapContainer"></div>
-        <div class="btns" ng-show="hasRole('ROLE_ADMIN')">
-            <a href="#/new" class="btn btn-success">Add restaurant</a>
-            <a href="" class="btn btn-success" ng-click="logout()">Logout</a>
-        </div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <!--<th>ID</th>-->
-                <th style="width: 100px;">Restaurant</th>
-                <!--<th>Review</th>-->
-                <!--<th>Kitchenrating</th>
-                <th>Interiorrating</th>
-                <th>Servicerating</th>-->
-                <th style="width: 100px;">Rating</th>
-               <!-- <th>Latitude</th>
-                <th>Longitude</th>-->
-                <th ng-show="hasRole('ROLE_ADMIN')"></th>
-            </tr>
-            </thead>
+    <div class="col-md-8">
+        <table class="results">
             <tbody>
-            <tr ng-repeat="rating in ratings">
-                <!--<td >{{restaurant.id}}</td>-->
-
-
-                <td ng-if="hasRole('ROLE_ADMIN')&&rating.reviewType=='RESTAURANT'" style="width: 300px;" class="name"><a href="#/edit/{{rating.restaurant.id}}">{{rating.restaurant.name}}</a>
-                </td>
-                <td ng-if="!hasRole('ROLE_ADMIN')&&rating.reviewType=='RESTAURANT'" style="width: 300px;" class="name"><a href="#/view/{{rating.restaurant.id}}">{{rating.restaurant.name}}</a>
+                <tr>
+                    <th colspan="3">
+                        Sort by:
+                        <a ng-click="sortBy('total')">Total rating</a>
+                        <a ng-click="sortBy('kitchen')">Kitchen</a>
+                        <a ng-click="sortBy('interior')">Interior</a>
+                        <a ng-click="sortBy('service')">Service</a>
+                        <a ng-click="sortBy('createdDate')">Review date</a>
+                        <a ng-click="sortBy('popularity')">Popularity</a>
+                    </th>
+                </tr>
+                <tr ng-repeat="item in items" class="item-row">
+                    <td class="item-image">
+                        <img ng-if="item.reviewType=='RESTAURANT'" ng-src="{{item.restaurant.previewImage}}" />
+                        <img ng-if="item.reviewType=='CHAIN'" ng-src="{{item.chain.previewImage}}" />
                     </td>
-                <td ng-if="hasRole('ROLE_ADMIN')&&rating.reviewType!='RESTAURANT'" style="width: 300px;" class="name"><a href="#/editchain/{{rating.chain.id}}">{{rating.chain.name}}</a>
+                    <td class="item-title">
+                        <a ng-if="item.reviewType=='RESTAURANT'" href="#/view/{{item.restaurant.id}}">{{item.restaurant.name}}</a>
+                        <a ng-if="item.reviewType=='CHAIN'" href="#/viewchain/{{item.chain.id}}">{{item.chain.name}}</a>
+                        <br>
+                        <span ng-repeat="label in item.labels" class="label label-success">{{label.name}}</span>
                     </td>
-                <td ng-if="!hasRole('ROLE_ADMIN')&&rating.reviewType!='RESTAURANT'" style="width: 300px;" class="name"><a href="#/editchain/{{rating.chain.id}}">{{rating.chain.name}}</a>
+                    <td class="item-sort-col">
+                        {{item.sortcol}}
                     </td>
-               <td ng-if="rating.reviewType=='RESTAURANT'"style="width: 300px;" class="totalrating">
-                   <span class="rating">Kitchen: {{rating.kitchen}}<br>
-                   Interior: {{rating.interior}}<br>
-                   Service: {{rating.service}}</span>
-                 {{rating.total}}</td>
-                <td ng-if="rating.reviewType!='RESTAURANT'"style="width: 300px;" class="totalrating">
-                   <span class="rating">Kitchen: {{rating.kitchenChain}}<br>
-                   Interior: {{rating.interiorChain}}<br>
-                   Service: {{rating.serviceChain}}</span>
-                    {{rating.total}}</td>
-               <!-- <td>{{restaurant.latitude}}</td>
-                <td>{{restaurant.longitude}}</td>-->
-                <!--<td ng-show="hasRole('ROLE_ADMIN')">-->
-                    <!--&lt;!&ndash;<button type="submit"&ndash;&gt;-->
-                            <!--&lt;!&ndash;ui-sref="restaurant.detail({id:restaurant.id})"&ndash;&gt;-->
-                            <!--&lt;!&ndash;class="btn btn-info btn-sm">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
-                   <!--&lt;!&ndash; <button type="submit"-->
-                            <!--href="/edit/{{restaurant.id}}"-->
-                            <!--class="btn btn-primary btn-sm">-->
-                        <!--<span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>-->
-                    <!--</button>&ndash;&gt;-->
-                    <!--<button type="submit"-->
-                            <!--ng-click="deleteRestaurant(restaurant.id)"-->
-                            <!--class="btn btn-danger btn-sm">-->
-                        <!--<span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>-->
-                    <!--</button>-->
-                <!--</td>-->
-            </tr>
+                </tr>
             </tbody>
         </table>
+        <div class="pagination">
+            <a ng-show="pageNum !== 0" ng-click="showPage(pageNum-1)">Prev</a>
+            <a ng-repeat="page in pagesArray" ng-click="showPage(page)">{{page + 1}}</a>
+            <a ng-show="pageNum !== totalPages-1" ng-click="showPage(pageNum+1)">Next</a>
+        </div>
+    </div>
+    <div class="col-md-4">
 
     </div>
 </div>

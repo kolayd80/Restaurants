@@ -1,0 +1,145 @@
+
+<div id="start-thumbs">
+    <div class="row1">
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[0].reviewType=='RESTAURANT'" ng-src="{{ratings[0].restaurant.previewImage}}" />
+                <img ng-if="ratings[0].reviewType=='CHAIN'" ng-src="{{ratings[0].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[0].reviewType=='RESTAURANT'">{{ratings[0].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[0].reviewType=='CHAIN'">{{ratings[0].chain.name}}</h2>
+                    <p>{{ratings[0].total}}</p>
+                    <a ng-if="ratings[0].reviewType=='RESTAURANT'" href="#/view/{{ratings[0].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[0].reviewType=='CHAIN'" href="#/editchain/{{ratings[0].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[1].reviewType=='RESTAURANT'" ng-src="{{ratings[1].restaurant.previewImage}}" />
+                <img ng-if="ratings[1].reviewType=='CHAIN'" ng-src="{{ratings[1].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[1].reviewType=='RESTAURANT'">{{ratings[1].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[1].reviewType=='CHAIN'">{{ratings[1].chain.name}}</h2>
+                    <p>{{ratings[1].total}}</p>
+                    <a ng-if="ratings[1].reviewType=='RESTAURANT'" href="#/view/{{ratings[1].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[1].reviewType=='CHAIN'" href="#/editchain/{{ratings[1].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[2].reviewType=='RESTAURANT'" ng-src="{{ratings[2].restaurant.previewImage}}" />
+                <img ng-if="ratings[2].reviewType=='CHAIN'" ng-src="{{ratings[2].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[2].reviewType=='RESTAURANT'">{{ratings[2].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[2].reviewType=='CHAIN'">{{ratings[2].chain.name}}</h2>
+                    <p>{{ratings[2].total}}</p>
+                    <a ng-if="ratings[2].reviewType=='RESTAURANT'" href="#/view/{{ratings[2].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[2].reviewType=='CHAIN'" href="#/editchain/{{ratings[2].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[3].reviewType=='RESTAURANT'" ng-src="{{ratings[3].restaurant.previewImage}}" />
+                <img ng-if="ratings[3].reviewType=='CHAIN'" ng-src="{{ratings[3].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[3].reviewType=='RESTAURANT'">{{ratings[3].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[3].reviewType=='CHAIN'">{{ratings[3].chain.name}}</h2>
+                    <p>{{ratings[3].total}}</p>
+                    <a ng-if="ratings[3].reviewType=='RESTAURANT'" href="#/view/{{ratings[3].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[3].reviewType=='CHAIN'" href="#/editchain/{{ratings[3].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[4].reviewType=='RESTAURANT'" ng-src="{{ratings[4].restaurant.previewImage}}" />
+                <img ng-if="ratings[4].reviewType=='CHAIN'" ng-src="{{ratings[4].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[4].reviewType=='RESTAURANT'">{{ratings[4].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[4].reviewType=='CHAIN'">{{ratings[4].chain.name}}</h2>
+                    <p>{{ratings[4].total}}</p>
+                    <a ng-if="ratings[4].reviewType=='RESTAURANT'" href="#/view/{{ratings[4].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[4].reviewType=='CHAIN'" href="#/editchain/{{ratings[4].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row2">
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[5].reviewType=='RESTAURANT'" ng-src="{{ratings[5].restaurant.previewImage}}" />
+                <img ng-if="ratings[5].reviewType=='CHAIN'" ng-src="{{ratings[5].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[5].reviewType=='RESTAURANT'">{{ratings[5].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[5].reviewType=='CHAIN'">{{ratings[5].chain.name}}</h2>
+                    <p>{{ratings[5].total}}</p>
+                    <a ng-if="ratings[5].reviewType=='RESTAURANT'" href="#/view/{{ratings[5].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[5].reviewType=='CHAIN'" href="#/editchain/{{ratings[5].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[6].reviewType=='RESTAURANT'" ng-src="{{ratings[6].restaurant.previewImage}}" />
+                <img ng-if="ratings[6].reviewType=='CHAIN'" ng-src="{{ratings[6].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[6].reviewType=='RESTAURANT'">{{ratings[6].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[6].reviewType=='CHAIN'">{{ratings[6].chain.name}}</h2>
+                    <p>{{ratings[6].total}}</p>
+                    <a ng-if="ratings[6].reviewType=='RESTAURANT'" href="#/view/{{ratings[6].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[6].reviewType=='CHAIN'" href="#/editchain/{{ratings[6].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[7].reviewType=='RESTAURANT'" ng-src="{{ratings[7].restaurant.previewImage}}" />
+                <img ng-if="ratings[7].reviewType=='CHAIN'" ng-src="{{ratings[7].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[7].reviewType=='RESTAURANT'">{{ratings[7].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[7].reviewType=='CHAIN'">{{ratings[7].chain.name}}</h2>
+                    <p>{{ratings[7].total}}</p>
+                    <a ng-if="ratings[7].reviewType=='RESTAURANT'" href="#/view/{{ratings[7].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[7].reviewType=='CHAIN'" href="#/editchain/{{ratings[7].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[8].reviewType=='RESTAURANT'" ng-src="{{ratings[8].restaurant.previewImage}}" />
+                <img ng-if="ratings[8].reviewType=='CHAIN'" ng-src="{{ratings[8].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[8].reviewType=='RESTAURANT'">{{ratings[8].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[8].reviewType=='CHAIN'">{{ratings[8].chain.name}}</h2>
+                    <p>{{ratings[8].total}}</p>
+                    <a ng-if="ratings[8].reviewType=='RESTAURANT'" href="#/view/{{ratings[8].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[8].reviewType=='CHAIN'" href="#/editchain/{{ratings[8].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-15">
+            <div class="view view-first">
+                <img ng-if="ratings[9].reviewType=='RESTAURANT'" ng-src="{{ratings[9].restaurant.previewImage}}" />
+                <img ng-if="ratings[9].reviewType=='CHAIN'" ng-src="{{ratings[9].chain.previewImage}}" />
+                <div class="mask">
+                    <h2 ng-if="ratings[9].reviewType=='RESTAURANT'">{{ratings[9].restaurant.name}}</h2>
+                    <h2 ng-if="ratings[9].reviewType=='CHAIN'">{{ratings[9].chain.name}}</h2>
+                    <p>{{ratings[9].total}}</p>
+                    <a ng-if="ratings[9].reviewType=='RESTAURANT'" href="#/view/{{ratings[9].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="ratings[9].reviewType=='CHAIN'" href="#/editchain/{{ratings[9].chain.id}}" class="info">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="moreButtons">
+    <a href="#/list" class="moreRestaurantsButton">More restaurants</a>
+</div>
+<div id="mapContainerWide"></div>
+
+
+

@@ -1,6 +1,16 @@
 package com.restaurant.domain;
 
+
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.restaurant.domain.util.JSR310DateTimeSerializer;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "review")
@@ -16,6 +26,9 @@ public class Review {
     @Enumerated(EnumType.STRING)
     @Column(name = "review_type")
     private ReviewType reviewType;
+
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
     @OneToOne
     private Restaurant restaurant;
@@ -61,5 +74,13 @@ public class Review {
 
     public void setChain(Chain chain) {
         this.chain = chain;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }

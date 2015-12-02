@@ -21,22 +21,13 @@ public class Rating {
     private Chain chain;
 
     @Column(name = "kitchen")
-    private Integer kitchen;
+    private Double kitchen;
 
     @Column(name = "interior")
-    private Integer interior;
+    private Double interior;
 
     @Column(name = "service")
-    private Integer service;
-
-    @Column(name = "kitchen_chain")
-    private Double kitchenChain;
-
-    @Column(name = "interior_chain")
-    private Double interiorChain;
-
-    @Column(name = "service_chain")
-    private Double serviceChain;
+    private Double service;
 
     @Column(name = "total")
     private Double total;
@@ -73,27 +64,27 @@ public class Rating {
         this.chain = chain;
     }
 
-    public Integer getKitchen() {
+    public Double getKitchen() {
         return kitchen;
     }
 
-    public void setKitchen(Integer kitchen) {
+    public void setKitchen(Double kitchen) {
         this.kitchen = kitchen;
     }
 
-    public Integer getInterior() {
+    public Double getInterior() {
         return interior;
     }
 
-    public void setInterior(Integer interior) {
+    public void setInterior(Double interior) {
         this.interior = interior;
     }
 
-    public Integer getService() {
+    public Double getService() {
         return service;
     }
 
-    public void setService(Integer service) {
+    public void setService(Double service) {
         this.service = service;
     }
 
@@ -105,27 +96,4 @@ public class Rating {
         this.total = total;
     }
 
-    public Double getKitchenChain() {
-        return kitchenChain;
-    }
-
-    public void setKitchenChain(Double kitchenChain) {
-        this.kitchenChain = kitchenChain;
-    }
-
-    public Double getInteriorChain() {
-        return interiorChain;
-    }
-
-    public void setInteriorChain(Double interiorChain) {
-        this.interiorChain = interiorChain;
-    }
-
-    public Double getServiceChain() {
-        return serviceChain;
-    }
-
-    public void setServiceChain(Double serviceChain) {
-        this.serviceChain = serviceChain;
-    }
 }

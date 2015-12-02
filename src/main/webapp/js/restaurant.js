@@ -112,6 +112,22 @@ app.factory("CPhoto", function ($resource) {
 
 app.factory("CommonRating", function ($resource) {
     return $resource('/api/rating/:id', {id: "@id"}, {
+        query: {params: {
+            page: "@page",
+            per_page: "@perpage",
+            sortby: "@sortby"
+        }},
+        update: {method:'PUT'},
+    });
+});
+
+app.factory("CommonReview", function ($resource) {
+    return $resource('/api/review/:id', {id: "@id"}, {
+        query: {params: {
+            page: "@page",
+            per_page: "@perpage",
+            sortby: "@sortby"
+        }},
         update: {method:'PUT'},
     });
 });
@@ -197,6 +213,27 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
             },
             data: {
                 file: file.files[0],
+                idRestaurant: $scope.restaurant.id
+            },
+            transformRequest: function(data) {
+                var fd = new FormData();
+                angular.forEach(data, function(value, key) {
+                    fd.append(key, value);
+                });
+                return fd;
+            }
+        });
+    };
+
+    $scope.uploadPreviewImage = function () {
+        return $http({
+            method: 'POST',
+            url: '/api/preview/upload',
+            headers: {
+                'Content-Type': undefined
+            },
+            data: {
+                file: fileP.files[0],
                 idRestaurant: $scope.restaurant.id
             },
             transformRequest: function(data) {
@@ -440,6 +477,32 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                 mapOfRestaurants = new google.maps.Map(
                     document.getElementById("mapContainer"), mapOptions
                 );
+                var i;
+                for (i in markers) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+
+                var re;
+                var listOfRestaurants = Restaurant.query(function () {
+                    for (re in listOfRestaurants) {
+                        var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
+                        var newMarker = new google.maps.Marker({
+                            position: latlng,
+                            map: mapOfRestaurants,
+                            title: listOfRestaurants[re].name
+                        });
+                        var markerUrl = 'index.html#/edit/' + listOfRestaurants[re].id;
+                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
+                            return function () {
+                                document.location = markerUrl;
+                            }
+                        }(markerUrl));
+                        markers.push(newMarker);
+                    }
+                });
+                $scope.restaurants = listOfRestaurants;
+                $scope.ratings = CommonRating.query();
             }, function (err){
                 var latitude = 46.4879;
                 var longitude = 30.7409;
@@ -457,7 +520,6 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                 mapOfRestaurants = new google.maps.Map(
                     document.getElementById("mapContainer"), mapOptions
                 );
-            }, function () {
                 var i;
                 for (i in markers) {
                     markers[i].setMap(null);
@@ -547,6 +609,27 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CL
             },
             data: {
                 file: file.files[0],
+                idChain: $scope.chain.id
+            },
+            transformRequest: function(data) {
+                var fd = new FormData();
+                angular.forEach(data, function(value, key) {
+                    fd.append(key, value);
+                });
+                return fd;
+            }
+        });
+    };
+
+    $scope.uploadPreviewImage = function () {
+        return $http({
+            method: 'POST',
+            url: '/api/chain/preview/upload',
+            headers: {
+                'Content-Type': undefined
+            },
+            data: {
+                file: fileP.files[0],
                 idChain: $scope.chain.id
             },
             transformRequest: function(data) {
@@ -668,7 +751,237 @@ app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview, 
 
 });
 
+app.controller("StartCtrl", function ($scope, Restaurant, CommonRating) {
 
+    function init() {
+        $scope.getRestaurants();
+    }
+
+    $scope.getRestaurants = function () {
+
+        function errorNavigator(err) {
+            alert('err');
+            if(err.code == 1) {
+                alert("Error: Access is denied!");
+            }
+
+            else if( err.code == 2) {
+                alert("Error: Position is unavailable!");
+            }
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+
+                var coords = new google.maps.LatLng(latitude, longitude);
+                var mapOptions = {
+                    zoom: 15,
+                    center: coords,
+                    mapTypeControl: true,
+                    navigationControlOptions: {
+                        style: google.maps.NavigationControlStyle.SMALL
+                    },
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    scrollwheel: false
+                };
+                mapOfRestaurants = new google.maps.Map(
+                    document.getElementById("mapContainerWide"), mapOptions
+                );
+                var i;
+                for (i in markers) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+
+                var re;
+                var listOfRestaurants = Restaurant.query(function () {
+                    for (re in listOfRestaurants) {
+                        var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
+                        var newMarker = new google.maps.Marker({
+                            position: latlng,
+                            map: mapOfRestaurants,
+                            title: listOfRestaurants[re].name
+                        });
+                        var markerUrl = 'index.html#/edit/' + listOfRestaurants[re].id;
+                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
+                            return function () {
+                                document.location = markerUrl;
+                            }
+                        }(markerUrl));
+                        markers.push(newMarker);
+                    }
+                });
+                $scope.restaurants = listOfRestaurants;
+
+                var ratingsTop = CommonRating.query({"page": 0, "per_page": 10, "sortby": 'total'}, function () {
+                    $scope.ratings = ratingsTop.content;
+                });
+
+            }, function (err){
+                var latitude = 46.4879;
+                var longitude = 30.7409;
+
+                var coords = new google.maps.LatLng(latitude, longitude);
+                var mapOptions = {
+                    zoom: 15,
+                    center: coords,
+                    mapTypeControl: true,
+                    navigationControlOptions: {
+                        style: google.maps.NavigationControlStyle.SMALL
+                    },
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                mapOfRestaurants = new google.maps.Map(
+                    document.getElementById("mapContainerWide"), mapOptions
+                );
+                var i;
+                for (i in markers) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+
+                var re;
+                var listOfRestaurants = Restaurant.query(function () {
+                    for (re in listOfRestaurants) {
+                        var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
+                        var newMarker = new google.maps.Marker({
+                            position: latlng,
+                            map: mapOfRestaurants,
+                            title: listOfRestaurants[re].name
+                        });
+                        var markerUrl = 'index.html#/edit/' + listOfRestaurants[re].id;
+                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
+                            return function () {
+                                document.location = markerUrl;
+                            }
+                        }(markerUrl));
+                        markers.push(newMarker);
+                    }
+                });
+                $scope.restaurants = listOfRestaurants;
+                var ratingsTop = CommonRating.query({"page": 0, "per_page": 10, "sortby": 'total'}, function () {
+                    $scope.ratings = ratingsTop.content;
+                });
+            });
+
+
+        } else {
+            alert("Geolocation API не поддерживается в вашем браузере");
+        }
+        ;
+    };
+
+
+
+    init();
+
+});
+
+app.controller("ListCtrl", function ($scope, Restaurant, CommonRating, Label, CLabel, CommonReview) {
+
+    function init() {
+        $scope.orderBy = 'total';
+        $scope.pageNum = 0;
+        getItems();
+    }
+
+    function getItems() {
+        if ($scope.orderBy == 'createdDate') {
+            var ratings = CommonReview.query({"page": $scope.pageNum, "per_page": 10, "sortby": $scope.orderBy}, function () {
+                var items = ratings.content;
+                for(var i in items) {
+                    var item = items[i];
+                    var formattedDate = item.createdDate[0] + '-';
+                    for(var j in item.createdDate) {
+                        if(j>0) {
+                            var str = '00'+item.createdDate[j];
+                            str = str.substr(str.length - 2);
+                            formattedDate = formattedDate + str;
+                            if(j==1) {
+                                formattedDate = formattedDate + '-';
+                            }
+                            if(j==2) {
+                                formattedDate = formattedDate + ' ';
+                            }
+                            if(j==3) {
+                                formattedDate = formattedDate + ':';
+                            }
+                            if(j==4) {
+                                formattedDate = formattedDate + ':';
+                            }
+                            if(j==5) {
+                                break;
+                            }
+                        }
+                    }
+                    item.sortcol = formattedDate;
+                    if(item.reviewType == 'RESTAURANT') {
+                        item.labels = Label.query({"restaurantId": item.restaurant.id});
+                    } else {
+                        item.labels = CLabel.query({"chainId": item.chain.id});
+                    };
+                };
+                $scope.items = items;
+                $scope.totalPages = ratings.totalPages;
+                var pagesArray = [];
+                var i;
+                var firstPageNum;
+                if ($scope.pageNum<=2) {
+                    firstPageNum = 0;
+                } else {
+                    firstPageNum = $scope.pageNum - 2;
+                };
+                for(i=0; i<Math.min(5, ratings.totalPages); i++) {
+                    pagesArray[i] = firstPageNum + i;
+                };
+                $scope.pagesArray = pagesArray;
+            });
+        } else {
+            var ratings = CommonRating.query({"page": $scope.pageNum, "per_page": 10, "sortby": $scope.orderBy}, function () {
+                var items = ratings.content;
+                for(var i in items) {
+                    var item = items[i];
+                    item.sortcol = item[$scope.orderBy];
+                    if(item.reviewType == 'RESTAURANT') {
+                        item.labels = Label.query({"restaurantId": item.restaurant.id});
+                    } else {
+                        item.labels = CLabel.query({"chainId": item.chain.id});
+                    };
+                };
+                $scope.items = items;
+                $scope.totalPages = ratings.totalPages;
+                var pagesArray = [];
+                var i;
+                var firstPageNum;
+                if ($scope.pageNum<=2) {
+                    firstPageNum = 0;
+                } else {
+                    firstPageNum = $scope.pageNum - 2;
+                };
+                for(i=0; i<Math.min(5, ratings.totalPages); i++) {
+                    pagesArray[i] = firstPageNum + i;
+                };
+                $scope.pagesArray = pagesArray;
+            });
+        };
+    }
+
+    $scope.sortBy = function(order) {
+        $scope.orderBy = order;
+        $scope.pageNum = 0;
+        getItems();
+    }
+
+    $scope.showPage = function(pageToShow) {
+        $scope.pageNum = pageToShow;
+        getItems();
+    }
+
+    init();
+
+});
 
 
 

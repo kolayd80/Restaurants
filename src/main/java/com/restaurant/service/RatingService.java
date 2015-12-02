@@ -6,8 +6,12 @@ import com.restaurant.domain.Restaurant;
 import com.restaurant.domain.ReviewType;
 import com.restaurant.repository.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -67,20 +71,24 @@ public class RatingService {
                 sumInterior = sumInterior + restoRating.getInterior();
                 sumService = sumService + restoRating.getService();
             }
-            chainRating.setKitchenChain(sumKitchen / restaurantList.size());
-            chainRating.setInteriorChain(sumInterior / restaurantList.size());
-            chainRating.setServiceChain(sumService / restaurantList.size());
+            chainRating.setKitchen(new BigDecimal(sumKitchen / restaurantList.size()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            chainRating.setInterior(new BigDecimal(sumInterior / restaurantList.size()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            chainRating.setService(new BigDecimal(sumService / restaurantList.size()).setScale(2, RoundingMode.HALF_UP).doubleValue());
         } else {
-            chainRating.setKitchenChain(0.0);
-            chainRating.setInteriorChain(0.0);
-            chainRating.setServiceChain(0.0);
+            chainRating.setKitchen(0.0);
+            chainRating.setInterior(0.0);
+            chainRating.setService(0.0);
         }
-        chainRating.setTotal(Math.rint(100.0 * (0.4 * chainRating.getKitchenChain() + 0.3 * chainRating.getServiceChain() + 0.3 * chainRating.getInteriorChain())) / 100.0);
+        chainRating.setTotal(Math.rint(100.0 * (0.4 * chainRating.getKitchen() + 0.3 * chainRating.getService() + 0.3 * chainRating.getInterior())) / 100.0);
         return ratingRepository.save(chainRating);
 
     }
 
     public List<Rating> findAllOrderByTotalRating() {
         return ratingRepository.findByReviewTypeOrRestaurantChainOrderByTotalDesc(ReviewType.CHAIN, null);
+    }
+
+    public Page<Rating> findAll(Pageable pageable) {
+        return ratingRepository.findByReviewTypeOrRestaurantChain(ReviewType.CHAIN, null, pageable);
     }
 }

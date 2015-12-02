@@ -20,6 +20,11 @@
     <input type="file" name="file" ng-model="file" id="file"><br />
     <input type="submit" value="Upload file">
 </form>
+
+<form class="btns"  ng-submit="uploadPreviewImage()" ng-show="(restaurant.id>0)+0">
+    <input type="file" name="file" ng-model="fileP" id="fileP"><br />
+    <input type="submit" value="Upload preview image">
+</form>
 <form >
 
     <div class="modal-body">

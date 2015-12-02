@@ -13,12 +13,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/chain")
@@ -170,4 +176,36 @@ public class ChainController {
         labelService.delete(chainId, labelId);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("label", labelId.toString())).build();
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value="/preview/upload", method=RequestMethod.POST)
+    public void handleFileUpload(@RequestParam("file") MultipartFile file,
+                                 @RequestParam("idChain") Long restaurantId) throws IOException {
+
+
+//        Map uploadResult = Singleton.getCloudinary().uploader().upload(file.getBytes(),
+//                ObjectUtils.asMap("resource_type", "auto"));
+//        photoService.save(restaurantId, (String) uploadResult.get("url"));
+
+        String name = "src/main/webapp/photo/";
+        UUID fileUuid = UUID.randomUUID();
+        name = name+fileUuid+".jpg";
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File(name)));
+                stream.write(bytes);
+                stream.close();
+
+                chainService.savePreview(restaurantId, name);
+
+            } catch (Exception e) {
+                //return "You failed to upload " + name + " => " + e.getMessage();
+            }
+        } else {
+            //return "You failed to upload " + name + " because the file was empty.";
+        }
+    }
+
 }

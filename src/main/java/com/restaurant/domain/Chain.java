@@ -22,8 +22,8 @@ public class Chain implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
+    @Column(name = "preview_image")
+    private String previewImage;
 
     @OneToOne(mappedBy = "chain", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -59,14 +59,6 @@ public class Chain implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
     }
 
     public Review getReview() {
@@ -109,4 +101,11 @@ public class Chain implements Serializable {
         this.restaurants = restaurants;
     }
 
+    public String getPreviewImage() {
+        return previewImage;
+    }
+
+    public void setPreviewImage(String previewImage) {
+        this.previewImage = previewImage;
+    }
 }
