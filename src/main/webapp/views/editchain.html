@@ -19,9 +19,9 @@
     <input type="file" name="file" ng-model="file" id="file"><br />
     <input type="submit" value="Upload file">
 </form>
-<form class="btns"  ng-submit="uploadPreviewImage()" ng-show="(chain.id>0)+0">
+<form class="btns"  ng-submit="uploadPreviewImage()">
     <input type="file" name="file" ng-model="fileP" id="fileP"><br />
-    <input type="submit" value="Upload preview image">
+    <input type="submit" value="Upload preview image" ng-show="(chain.id>0)+0">
 </form>
 <form >
 

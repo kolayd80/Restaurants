@@ -18,6 +18,15 @@ public class ChainService {
 
     public Chain save(Chain chain) {
 
+        if (chain.getId() != null) {
+            Chain savedChain = chainRepository.findOne(chain.getId());
+            if (savedChain != null) {
+                if (savedChain.getPreviewImage() != null) {
+                    chain.setPreviewImage(savedChain.getPreviewImage());
+                }
+            }
+        }
+
         return chainRepository.save(chain);
 
     }

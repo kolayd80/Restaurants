@@ -26,10 +26,6 @@ public class Restaurant implements Serializable {
     @JsonIgnore
     private Review review;
 
-    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Rating rating;
-
     @Column(name = "latitude")
     private Double latitude;
     
@@ -122,14 +118,6 @@ public class Restaurant implements Serializable {
 
     public void setLabels(Set<Label> labels) {
         this.labels = labels;
-    }
-
-    public Rating getRating() {
-        return rating;
-    }
-
-    public void setRating(Rating rating) {
-        this.rating = rating;
     }
 
     public Chain getChain() {

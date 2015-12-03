@@ -2,11 +2,9 @@ package com.restaurant.controller;
 
 import com.restaurant.controller.util.HeaderUtil;
 import com.restaurant.domain.Label;
-import com.restaurant.domain.Rating;
 import com.restaurant.domain.Restaurant;
 import com.restaurant.domain.Review;
 import com.restaurant.service.LabelService;
-import com.restaurant.service.RatingService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +42,6 @@ public class RestaurantController {
 
     @Autowired
     private ReviewService reviewService;
-
-    @Autowired
-    private RatingService ratingService;
 
     /**
      * POST  /restaurants -> Create a new restaurant.

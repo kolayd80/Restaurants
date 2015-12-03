@@ -636,6 +636,7 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CL
         });
     };
 
+
     $scope.deleteLabel = function(label) {
         $scope.labels.splice($scope.labels.indexOf(label), 1);
     }
@@ -735,10 +736,55 @@ app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview) 
             var review = new CReview($scope.review);
             review.$save({"chainId":chain.id});
 
+            if (fileP.files.length > 0) {
+                $http({
+                    method: 'POST',
+                    url: '/api/chain/preview/upload',
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    data: {
+                        file: fileP.files[0],
+                        idChain: chain.id
+                    },
+                    transformRequest: function (data) {
+                        var fd = new FormData();
+                        angular.forEach(data, function (value, key) {
+                            fd.append(key, value);
+                        });
+                        return fd;
+                    }
+                })
+            }
+            document.location="#/list";
         });
 
 
-        document.location="#/list";
+
+    };
+
+    $scope.uploadPreviewImage = function () {
+        var chain = new Chain($scope.chain);
+        chain.$save({}, function(){
+            $http({
+                method: 'POST',
+                url: '/api/chain/preview/upload',
+                headers: {
+                    'Content-Type': undefined
+                },
+                data: {
+                    file: fileP.files[0],
+                    idChain: chain.id
+                },
+                transformRequest: function(data) {
+                    var fd = new FormData();
+                    angular.forEach(data, function(value, key) {
+                        fd.append(key, value);
+                    });
+                    return fd;
+                }
+            })}
+        );
     };
 
     init();

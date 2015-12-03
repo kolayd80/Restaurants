@@ -29,10 +29,6 @@ public class Chain implements Serializable {
     @JsonIgnore
     private Review review;
 
-    @OneToOne(mappedBy = "chain", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Rating rating;
-
     @OneToMany(mappedBy = "chain", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
@@ -67,14 +63,6 @@ public class Chain implements Serializable {
 
     public void setReview(Review review) {
         this.review = review;
-    }
-
-    public Rating getRating() {
-        return rating;
-    }
-
-    public void setRating(Rating rating) {
-        this.rating = rating;
     }
 
     public Set<Photo> getPhotos() {
