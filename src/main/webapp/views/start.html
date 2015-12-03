@@ -3,66 +3,66 @@
     <div class="row1">
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[0].reviewType=='RESTAURANT'" ng-src="{{ratings[0].restaurant.previewImage}}" />
-                <img ng-if="ratings[0].reviewType=='CHAIN'" ng-src="{{ratings[0].chain.previewImage}}" />
+                <img ng-if="reviews[0].reviewType=='RESTAURANT'" ng-src="{{reviews[0].restaurant.previewImage}}" />
+                <img ng-if="reviews[0].reviewType=='CHAIN'" ng-src="{{reviews[0].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[0].reviewType=='RESTAURANT'">{{ratings[0].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[0].reviewType=='CHAIN'">{{ratings[0].chain.name}}</h2>
-                    <p>{{ratings[0].total}}</p>
-                    <a ng-if="ratings[0].reviewType=='RESTAURANT'" href="#/view/{{ratings[0].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[0].reviewType=='CHAIN'" href="#/editchain/{{ratings[0].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[0].reviewType=='RESTAURANT'">{{reviews[0].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[0].reviewType=='CHAIN'">{{reviews[0].chain.name}}</h2>
+                    <p>{{reviews[0].total}}</p>
+                    <a ng-if="reviews[0].reviewType=='RESTAURANT'" href="#/view/{{reviews[0].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[0].reviewType=='CHAIN'" href="#/editchain/{{reviews[0].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[1].reviewType=='RESTAURANT'" ng-src="{{ratings[1].restaurant.previewImage}}" />
-                <img ng-if="ratings[1].reviewType=='CHAIN'" ng-src="{{ratings[1].chain.previewImage}}" />
+                <img ng-if="reviews[1].reviewType=='RESTAURANT'" ng-src="{{reviews[1].restaurant.previewImage}}" />
+                <img ng-if="reviews[1].reviewType=='CHAIN'" ng-src="{{reviews[1].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[1].reviewType=='RESTAURANT'">{{ratings[1].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[1].reviewType=='CHAIN'">{{ratings[1].chain.name}}</h2>
-                    <p>{{ratings[1].total}}</p>
-                    <a ng-if="ratings[1].reviewType=='RESTAURANT'" href="#/view/{{ratings[1].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[1].reviewType=='CHAIN'" href="#/editchain/{{ratings[1].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[1].reviewType=='RESTAURANT'">{{reviews[1].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[1].reviewType=='CHAIN'">{{reviews[1].chain.name}}</h2>
+                    <p>{{reviews[1].total}}</p>
+                    <a ng-if="reviews[1].reviewType=='RESTAURANT'" href="#/view/{{reviews[1].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[1].reviewType=='CHAIN'" href="#/editchain/{{reviews[1].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[2].reviewType=='RESTAURANT'" ng-src="{{ratings[2].restaurant.previewImage}}" />
-                <img ng-if="ratings[2].reviewType=='CHAIN'" ng-src="{{ratings[2].chain.previewImage}}" />
+                <img ng-if="reviews[2].reviewType=='RESTAURANT'" ng-src="{{reviews[2].restaurant.previewImage}}" />
+                <img ng-if="reviews[2].reviewType=='CHAIN'" ng-src="{{reviews[2].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[2].reviewType=='RESTAURANT'">{{ratings[2].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[2].reviewType=='CHAIN'">{{ratings[2].chain.name}}</h2>
-                    <p>{{ratings[2].total}}</p>
-                    <a ng-if="ratings[2].reviewType=='RESTAURANT'" href="#/view/{{ratings[2].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[2].reviewType=='CHAIN'" href="#/editchain/{{ratings[2].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[2].reviewType=='RESTAURANT'">{{reviews[2].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[2].reviewType=='CHAIN'">{{reviews[2].chain.name}}</h2>
+                    <p>{{reviews[2].total}}</p>
+                    <a ng-if="reviews[2].reviewType=='RESTAURANT'" href="#/view/{{reviews[2].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[2].reviewType=='CHAIN'" href="#/editchain/{{reviews[2].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[3].reviewType=='RESTAURANT'" ng-src="{{ratings[3].restaurant.previewImage}}" />
-                <img ng-if="ratings[3].reviewType=='CHAIN'" ng-src="{{ratings[3].chain.previewImage}}" />
+                <img ng-if="reviews[3].reviewType=='RESTAURANT'" ng-src="{{reviews[3].restaurant.previewImage}}" />
+                <img ng-if="reviews[3].reviewType=='CHAIN'" ng-src="{{reviews[3].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[3].reviewType=='RESTAURANT'">{{ratings[3].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[3].reviewType=='CHAIN'">{{ratings[3].chain.name}}</h2>
-                    <p>{{ratings[3].total}}</p>
-                    <a ng-if="ratings[3].reviewType=='RESTAURANT'" href="#/view/{{ratings[3].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[3].reviewType=='CHAIN'" href="#/editchain/{{ratings[3].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[3].reviewType=='RESTAURANT'">{{reviews[3].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[3].reviewType=='CHAIN'">{{reviews[3].chain.name}}</h2>
+                    <p>{{reviews[3].total}}</p>
+                    <a ng-if="reviews[3].reviewType=='RESTAURANT'" href="#/view/{{reviews[3].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[3].reviewType=='CHAIN'" href="#/editchain/{{reviews[3].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[4].reviewType=='RESTAURANT'" ng-src="{{ratings[4].restaurant.previewImage}}" />
-                <img ng-if="ratings[4].reviewType=='CHAIN'" ng-src="{{ratings[4].chain.previewImage}}" />
+                <img ng-if="reviews[4].reviewType=='RESTAURANT'" ng-src="{{reviews[4].restaurant.previewImage}}" />
+                <img ng-if="reviews[4].reviewType=='CHAIN'" ng-src="{{reviews[4].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[4].reviewType=='RESTAURANT'">{{ratings[4].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[4].reviewType=='CHAIN'">{{ratings[4].chain.name}}</h2>
-                    <p>{{ratings[4].total}}</p>
-                    <a ng-if="ratings[4].reviewType=='RESTAURANT'" href="#/view/{{ratings[4].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[4].reviewType=='CHAIN'" href="#/editchain/{{ratings[4].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[4].reviewType=='RESTAURANT'">{{reviews[4].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[4].reviewType=='CHAIN'">{{reviews[4].chain.name}}</h2>
+                    <p>{{reviews[4].total}}</p>
+                    <a ng-if="reviews[4].reviewType=='RESTAURANT'" href="#/view/{{reviews[4].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[4].reviewType=='CHAIN'" href="#/editchain/{{reviews[4].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
@@ -70,66 +70,66 @@
     <div class="row2">
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[5].reviewType=='RESTAURANT'" ng-src="{{ratings[5].restaurant.previewImage}}" />
-                <img ng-if="ratings[5].reviewType=='CHAIN'" ng-src="{{ratings[5].chain.previewImage}}" />
+                <img ng-if="reviews[5].reviewType=='RESTAURANT'" ng-src="{{reviews[5].restaurant.previewImage}}" />
+                <img ng-if="reviews[5].reviewType=='CHAIN'" ng-src="{{reviews[5].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[5].reviewType=='RESTAURANT'">{{ratings[5].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[5].reviewType=='CHAIN'">{{ratings[5].chain.name}}</h2>
-                    <p>{{ratings[5].total}}</p>
-                    <a ng-if="ratings[5].reviewType=='RESTAURANT'" href="#/view/{{ratings[5].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[5].reviewType=='CHAIN'" href="#/editchain/{{ratings[5].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[5].reviewType=='RESTAURANT'">{{reviews[5].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[5].reviewType=='CHAIN'">{{reviews[5].chain.name}}</h2>
+                    <p>{{reviews[5].total}}</p>
+                    <a ng-if="reviews[5].reviewType=='RESTAURANT'" href="#/view/{{reviews[5].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[5].reviewType=='CHAIN'" href="#/editchain/{{reviews[5].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[6].reviewType=='RESTAURANT'" ng-src="{{ratings[6].restaurant.previewImage}}" />
-                <img ng-if="ratings[6].reviewType=='CHAIN'" ng-src="{{ratings[6].chain.previewImage}}" />
+                <img ng-if="reviews[6].reviewType=='RESTAURANT'" ng-src="{{reviews[6].restaurant.previewImage}}" />
+                <img ng-if="reviews[6].reviewType=='CHAIN'" ng-src="{{reviews[6].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[6].reviewType=='RESTAURANT'">{{ratings[6].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[6].reviewType=='CHAIN'">{{ratings[6].chain.name}}</h2>
-                    <p>{{ratings[6].total}}</p>
-                    <a ng-if="ratings[6].reviewType=='RESTAURANT'" href="#/view/{{ratings[6].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[6].reviewType=='CHAIN'" href="#/editchain/{{ratings[6].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[6].reviewType=='RESTAURANT'">{{reviews[6].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[6].reviewType=='CHAIN'">{{reviews[6].chain.name}}</h2>
+                    <p>{{reviews[6].total}}</p>
+                    <a ng-if="reviews[6].reviewType=='RESTAURANT'" href="#/view/{{reviews[6].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[6].reviewType=='CHAIN'" href="#/editchain/{{reviews[6].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[7].reviewType=='RESTAURANT'" ng-src="{{ratings[7].restaurant.previewImage}}" />
-                <img ng-if="ratings[7].reviewType=='CHAIN'" ng-src="{{ratings[7].chain.previewImage}}" />
+                <img ng-if="reviews[7].reviewType=='RESTAURANT'" ng-src="{{reviews[7].restaurant.previewImage}}" />
+                <img ng-if="reviews[7].reviewType=='CHAIN'" ng-src="{{reviews[7].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[7].reviewType=='RESTAURANT'">{{ratings[7].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[7].reviewType=='CHAIN'">{{ratings[7].chain.name}}</h2>
-                    <p>{{ratings[7].total}}</p>
-                    <a ng-if="ratings[7].reviewType=='RESTAURANT'" href="#/view/{{ratings[7].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[7].reviewType=='CHAIN'" href="#/editchain/{{ratings[7].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[7].reviewType=='RESTAURANT'">{{reviews[7].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[7].reviewType=='CHAIN'">{{reviews[7].chain.name}}</h2>
+                    <p>{{reviews[7].total}}</p>
+                    <a ng-if="reviews[7].reviewType=='RESTAURANT'" href="#/view/{{reviews[7].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[7].reviewType=='CHAIN'" href="#/editchain/{{reviews[7].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[8].reviewType=='RESTAURANT'" ng-src="{{ratings[8].restaurant.previewImage}}" />
-                <img ng-if="ratings[8].reviewType=='CHAIN'" ng-src="{{ratings[8].chain.previewImage}}" />
+                <img ng-if="reviews[8].reviewType=='RESTAURANT'" ng-src="{{reviews[8].restaurant.previewImage}}" />
+                <img ng-if="reviews[8].reviewType=='CHAIN'" ng-src="{{reviews[8].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[8].reviewType=='RESTAURANT'">{{ratings[8].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[8].reviewType=='CHAIN'">{{ratings[8].chain.name}}</h2>
-                    <p>{{ratings[8].total}}</p>
-                    <a ng-if="ratings[8].reviewType=='RESTAURANT'" href="#/view/{{ratings[8].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[8].reviewType=='CHAIN'" href="#/editchain/{{ratings[8].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[8].reviewType=='RESTAURANT'">{{reviews[8].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[8].reviewType=='CHAIN'">{{reviews[8].chain.name}}</h2>
+                    <p>{{reviews[8].total}}</p>
+                    <a ng-if="reviews[8].reviewType=='RESTAURANT'" href="#/view/{{reviews[8].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[8].reviewType=='CHAIN'" href="#/editchain/{{reviews[8].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>
         <div class="col-md-15">
             <div class="view view-first">
-                <img ng-if="ratings[9].reviewType=='RESTAURANT'" ng-src="{{ratings[9].restaurant.previewImage}}" />
-                <img ng-if="ratings[9].reviewType=='CHAIN'" ng-src="{{ratings[9].chain.previewImage}}" />
+                <img ng-if="reviews[9].reviewType=='RESTAURANT'" ng-src="{{reviews[9].restaurant.previewImage}}" />
+                <img ng-if="reviews[9].reviewType=='CHAIN'" ng-src="{{reviews[9].chain.previewImage}}" />
                 <div class="mask">
-                    <h2 ng-if="ratings[9].reviewType=='RESTAURANT'">{{ratings[9].restaurant.name}}</h2>
-                    <h2 ng-if="ratings[9].reviewType=='CHAIN'">{{ratings[9].chain.name}}</h2>
-                    <p>{{ratings[9].total}}</p>
-                    <a ng-if="ratings[9].reviewType=='RESTAURANT'" href="#/view/{{ratings[9].restaurant.id}}" class="info">Read More</a>
-                    <a ng-if="ratings[9].reviewType=='CHAIN'" href="#/editchain/{{ratings[9].chain.id}}" class="info">Read More</a>
+                    <h2 ng-if="reviews[9].reviewType=='RESTAURANT'">{{reviews[9].restaurant.name}}</h2>
+                    <h2 ng-if="reviews[9].reviewType=='CHAIN'">{{reviews[9].chain.name}}</h2>
+                    <p>{{reviews[9].total}}</p>
+                    <a ng-if="reviews[9].reviewType=='RESTAURANT'" href="#/view/{{reviews[9].restaurant.id}}" class="info">Read More</a>
+                    <a ng-if="reviews[9].reviewType=='CHAIN'" href="#/editchain/{{reviews[9].chain.id}}" class="info">Read More</a>
                 </div>
             </div>
         </div>

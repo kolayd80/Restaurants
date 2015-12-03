@@ -1,10 +1,12 @@
 package com.restaurant.service;
 
+import com.mysema.query.types.expr.BooleanExpression;
 import com.restaurant.domain.Chain;
 import com.restaurant.domain.Rating;
 import com.restaurant.domain.Restaurant;
 import com.restaurant.domain.ReviewType;
 import com.restaurant.repository.RatingRepository;
+import com.restaurant.repository.SearchPredicatesBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class RatingService {
@@ -90,5 +94,20 @@ public class RatingService {
 
     public Page<Rating> findAll(Pageable pageable) {
         return ratingRepository.findByReviewTypeOrRestaurantChain(ReviewType.CHAIN, null, pageable);
+    }
+
+    public Page<Rating> findAllByQuerydsl(final String search, Pageable pageable) {
+
+        final SearchPredicatesBuilder builder = new SearchPredicatesBuilder();
+        if (search != null) {
+            final Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+            final Matcher matcher = pattern.matcher(search + ",");
+            while (matcher.find()) {
+                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+            }
+        }
+        final BooleanExpression exp = builder.build();
+
+        return ratingRepository.findAll(exp, pageable);
     }
 }

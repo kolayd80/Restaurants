@@ -55,7 +55,7 @@
         <div class="form-group">
             <label for="field_kitchenrating">Kitchen rating</label>
             <input type="number" class="form-control" name="kitchenrating" id="field_kitchenrating"
-                   ng-model="rating.kitchen"
+                   ng-model="review.kitchen"
                    required>
 
             <div ng-show="editForm.kitchenrating.$invalid">
@@ -73,7 +73,7 @@
         <div class="form-group">
             <label for="field_interiorrating">Interior rating</label>
             <input type="number" class="form-control" name="interiorrating" id="field_interiorrating"
-                   ng-model="rating.interior"
+                   ng-model="review.interior"
                    required>
 
             <div ng-show="editForm.interiorrating.$invalid">
@@ -91,7 +91,7 @@
         <div class="form-group">
             <label for="field_servicerating">Service rating</label>
             <input type="number" class="form-control" name="servicerating" id="field_servicerating"
-                   ng-model="rating.service"
+                   ng-model="review.service"
                    required>
 
             <div ng-show="editForm.servicerating.$invalid">

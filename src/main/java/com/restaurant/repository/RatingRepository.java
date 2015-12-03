@@ -7,15 +7,13 @@ import com.restaurant.domain.ReviewType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-/**
- * Created by Nikolay on 09.11.2015.
- */
-public interface RatingRepository extends JpaRepository<Rating, Long> {
+public interface RatingRepository extends JpaRepository<Rating, Long>, QueryDslPredicateExecutor<Rating> {
 
     Rating findByRestaurant(@Param("restaurant")Restaurant restaurant);
 

@@ -25,4 +25,11 @@ public class ReviewController {
     public Page<Review> reviewList(@RequestParam("page") int pageNumber, @RequestParam("per_page") int pageLimit, @RequestParam("sortby") String sortBy) {
         return reviewService.findAll(new PageRequest(pageNumber, pageLimit, Sort.Direction.DESC, sortBy));
     }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Page<Review> ratingListByQuerydsl(@RequestParam(value = "search") final String search, @RequestParam("page") int pageNumber, @RequestParam("per_page") int pageLimit, @RequestParam("sortby") String sortBy){
+
+        return reviewService.findAllByQuerydsl(search, new PageRequest(pageNumber, pageLimit, Sort.Direction.DESC, sortBy));
+    }
 }

@@ -30,6 +30,18 @@ public class Review {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    @Column(name = "kitchen")
+    private Double kitchen;
+
+    @Column(name = "interior")
+    private Double interior;
+
+    @Column(name = "service")
+    private Double service;
+
+    @Column(name = "total")
+    private Double total;
+
     @OneToOne
     private Restaurant restaurant;
 
@@ -82,5 +94,37 @@ public class Review {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Double getKitchen() {
+        return kitchen;
+    }
+
+    public void setKitchen(Double kitchen) {
+        this.kitchen = kitchen;
+    }
+
+    public Double getInterior() {
+        return interior;
+    }
+
+    public void setInterior(Double interior) {
+        this.interior = interior;
+    }
+
+    public Double getService() {
+        return service;
+    }
+
+    public void setService(Double service) {
+        this.service = service;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
     }
 }

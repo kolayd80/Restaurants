@@ -74,11 +74,11 @@ app.factory("Review", function ($resource) {
     });
 });
 
-app.factory("Rating", function ($resource) {
+/*app.factory("Rating", function ($resource) {
     return $resource('/api/restaurant/:restaurantId/rating/:ratingId', {restaurantId:"@restaurantId", ratingId: "@ratingId"}, {
         update: {method:'PUT'},
     });
-});
+});*/
 
 app.factory("Chain", function ($resource) {
     return $resource('/api/chain/:id', {id: "@id"}, {
@@ -98,18 +98,18 @@ app.factory("CReview", function ($resource) {
     });
 });
 
-app.factory("CRating", function ($resource) {
+/*app.factory("CRating", function ($resource) {
     return $resource('/api/chain/:chainId/rating/:ratingId', {chainId:"@chainId", ratingId: "@ratingId"}, {
         update: {method:'PUT'},
     });
-});
+});*/
 
 app.factory("CPhoto", function ($resource) {
     return $resource('/api/photo/chain/:id', {id: "@id"}, {
         query: {method:'GET', isArray:true},
     });
 });
-
+/*
 app.factory("CommonRating", function ($resource) {
     return $resource('/api/rating/:id', {id: "@id"}, {
         query: {params: {
@@ -119,7 +119,7 @@ app.factory("CommonRating", function ($resource) {
         }},
         update: {method:'PUT'},
     });
-});
+});*/
 
 app.factory("CommonReview", function ($resource) {
     return $resource('/api/review/:id', {id: "@id"}, {
@@ -144,7 +144,7 @@ app.factory("LoginService", function ($resource) {
     );
 });
 
-app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label, Review, Rating, Chain) {
+app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label, Review, Chain) {
 
     function init() {
         var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function(){
@@ -179,15 +179,13 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
 
         $scope.review = Review.get({"restaurantId": $routeParams.id});
 
-        $scope.rating = Rating.get({"restaurantId": $routeParams.id});
-
-        var kitchenrating = $scope.rating.kitchen;
+        var kitchenrating = $scope.review.kitchen;
         var kitchen_star_width = kitchenrating*16 + Math.ceil(kitchenrating);
         $('#rating_votes').width(kitchen_star_width);
-        var interiorrating = $scope.rating.interior;
+        var interiorrating = $scope.review.interior;
         var interior_star_width = interiorrating*16 + Math.ceil(interiorrating);
         $('#interior_votes').width(interior_star_width);
-        var servicerating = $scope.rating.service;
+        var servicerating = $scope.review.service;
         var service_star_width = servicerating*16 + Math.ceil(servicerating);
         $('#service_votes').width(service_star_width);
 
@@ -302,12 +300,12 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
                 review.$update({"restaurantId":restaurant.id, "reviewId":$scope.review.id});
             };
 
-            var rating = new Rating($scope.rating);
+            /*var rating = new Rating($scope.rating);
             if($scope.rating.id==null|undefined) {
                 rating.$save({"restaurantId":restaurant.id});
             } else {
                 rating.$update({"restaurantId":restaurant.id, "ratingId":$scope.rating.id});
-            };
+            };*/
         });
         document.location="#/list";
     };
@@ -316,7 +314,7 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
 
 });
 
-app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, Review, Rating, Chain) {
+app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, Review, Chain) {
 
     function init() {
         function errorNavigator(err) {
@@ -385,10 +383,6 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
         $scope.review = {
             id: null,
             content: "",
-            restaurant: null
-        };
-        $scope.rating = {
-            id: null,
             kitchen: 0,
             interior: 0,
             service: 0,
@@ -428,8 +422,8 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
             var review = new Review($scope.review);
             review.$save({"restaurantId":restaurant.id});
 
-            var rating = new Rating($scope.rating);
-            rating.$save({"restaurantId":restaurant.id});
+            /*var rating = new Rating($scope.rating);
+            rating.$save({"restaurantId":restaurant.id});*/
         });
 
 
@@ -440,7 +434,7 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
 
 });
 
-app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
+app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonReview) {
 
     function init() {
         $scope.getRestaurants();
@@ -502,7 +496,7 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                     }
                 });
                 $scope.restaurants = listOfRestaurants;
-                $scope.ratings = CommonRating.query();
+                $scope.reviews = CommonReview.query();
             }, function (err){
                 var latitude = 46.4879;
                 var longitude = 30.7409;
@@ -545,7 +539,7 @@ app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonRating) {
                     }
                 });
                 $scope.restaurants = listOfRestaurants;
-                $scope.ratings = CommonRating.query();
+                $scope.reviews = CommonReview.query();
             });
 
 
@@ -587,7 +581,7 @@ app.controller("LoginCtrl", function ($scope, $rootScope, $location, $http, $coo
 
 });
 
-app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CLabel, CReview, CRating, CPhoto) {
+app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CLabel, CReview, CPhoto) {
 
     function init() {
         $scope.chain = Chain.get({"id": $routeParams.id});
@@ -705,7 +699,7 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CL
 
 });
 
-app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview, CRating) {
+app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview) {
 
     function init() {
 
@@ -751,7 +745,7 @@ app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview, 
 
 });
 
-app.controller("StartCtrl", function ($scope, Restaurant, CommonRating) {
+app.controller("StartCtrl", function ($scope, Restaurant, CommonReview) {
 
     function init() {
         $scope.getRestaurants();
@@ -815,8 +809,8 @@ app.controller("StartCtrl", function ($scope, Restaurant, CommonRating) {
                 });
                 $scope.restaurants = listOfRestaurants;
 
-                var ratingsTop = CommonRating.query({"page": 0, "per_page": 10, "sortby": 'total'}, function () {
-                    $scope.ratings = ratingsTop.content;
+                var reviewsTop = CommonReview.query({"page": 0, "per_page": 10, "sortby": 'total'}, function () {
+                    $scope.reviews = reviewsTop.content;
                 });
 
             }, function (err){
@@ -861,8 +855,8 @@ app.controller("StartCtrl", function ($scope, Restaurant, CommonRating) {
                     }
                 });
                 $scope.restaurants = listOfRestaurants;
-                var ratingsTop = CommonRating.query({"page": 0, "per_page": 10, "sortby": 'total'}, function () {
-                    $scope.ratings = ratingsTop.content;
+                var reviewsTop = CommonReview.query({"page": 0, "per_page": 10, "sortby": 'total'}, function () {
+                    $scope.reviews = reviewsTop.content;
                 });
             });
 
@@ -879,7 +873,7 @@ app.controller("StartCtrl", function ($scope, Restaurant, CommonRating) {
 
 });
 
-app.controller("ListCtrl", function ($scope, Restaurant, CommonRating, Label, CLabel, CommonReview) {
+app.controller("ListCtrl", function ($scope, Restaurant, Label, CLabel, CommonReview) {
 
     function init() {
         $scope.orderBy = 'total';
@@ -888,35 +882,39 @@ app.controller("ListCtrl", function ($scope, Restaurant, CommonRating, Label, CL
     }
 
     function getItems() {
-        if ($scope.orderBy == 'createdDate') {
-            var ratings = CommonReview.query({"page": $scope.pageNum, "per_page": 10, "sortby": $scope.orderBy}, function () {
-                var items = ratings.content;
+
+            var reviews = CommonReview.query({"page": $scope.pageNum, "per_page": 10, "sortby": $scope.orderBy}, function () {
+                var items = reviews.content;
                 for(var i in items) {
                     var item = items[i];
-                    var formattedDate = item.createdDate[0] + '-';
-                    for(var j in item.createdDate) {
-                        if(j>0) {
-                            var str = '00'+item.createdDate[j];
-                            str = str.substr(str.length - 2);
-                            formattedDate = formattedDate + str;
-                            if(j==1) {
-                                formattedDate = formattedDate + '-';
-                            }
-                            if(j==2) {
-                                formattedDate = formattedDate + ' ';
-                            }
-                            if(j==3) {
-                                formattedDate = formattedDate + ':';
-                            }
-                            if(j==4) {
-                                formattedDate = formattedDate + ':';
-                            }
-                            if(j==5) {
-                                break;
+                    if ($scope.orderBy == 'createdDate') {
+                        var formattedDate = item.createdDate[0] + '-';
+                        for (var j in item.createdDate) {
+                            if (j > 0) {
+                                var str = '00' + item.createdDate[j];
+                                str = str.substr(str.length - 2);
+                                formattedDate = formattedDate + str;
+                                if (j == 1) {
+                                    formattedDate = formattedDate + '-';
+                                }
+                                if (j == 2) {
+                                    formattedDate = formattedDate + ' ';
+                                }
+                                if (j == 3) {
+                                    formattedDate = formattedDate + ':';
+                                }
+                                if (j == 4) {
+                                    formattedDate = formattedDate + ':';
+                                }
+                                if (j == 5) {
+                                    break;
+                                }
                             }
                         }
+                        item.sortcol = formattedDate;
+                    } else {
+                        item.sortcol = item[$scope.orderBy];
                     }
-                    item.sortcol = formattedDate;
                     if(item.reviewType == 'RESTAURANT') {
                         item.labels = Label.query({"restaurantId": item.restaurant.id});
                     } else {
@@ -924,7 +922,7 @@ app.controller("ListCtrl", function ($scope, Restaurant, CommonRating, Label, CL
                     };
                 };
                 $scope.items = items;
-                $scope.totalPages = ratings.totalPages;
+                $scope.totalPages = reviews.totalPages;
                 var pagesArray = [];
                 var i;
                 var firstPageNum;
@@ -933,39 +931,12 @@ app.controller("ListCtrl", function ($scope, Restaurant, CommonRating, Label, CL
                 } else {
                     firstPageNum = $scope.pageNum - 2;
                 };
-                for(i=0; i<Math.min(5, ratings.totalPages); i++) {
+                for(i=0; i<Math.min(5, reviews.totalPages); i++) {
                     pagesArray[i] = firstPageNum + i;
                 };
                 $scope.pagesArray = pagesArray;
             });
-        } else {
-            var ratings = CommonRating.query({"page": $scope.pageNum, "per_page": 10, "sortby": $scope.orderBy}, function () {
-                var items = ratings.content;
-                for(var i in items) {
-                    var item = items[i];
-                    item.sortcol = item[$scope.orderBy];
-                    if(item.reviewType == 'RESTAURANT') {
-                        item.labels = Label.query({"restaurantId": item.restaurant.id});
-                    } else {
-                        item.labels = CLabel.query({"chainId": item.chain.id});
-                    };
-                };
-                $scope.items = items;
-                $scope.totalPages = ratings.totalPages;
-                var pagesArray = [];
-                var i;
-                var firstPageNum;
-                if ($scope.pageNum<=2) {
-                    firstPageNum = 0;
-                } else {
-                    firstPageNum = $scope.pageNum - 2;
-                };
-                for(i=0; i<Math.min(5, ratings.totalPages); i++) {
-                    pagesArray[i] = firstPageNum + i;
-                };
-                $scope.pagesArray = pagesArray;
-            });
-        };
+
     }
 
     $scope.sortBy = function(order) {

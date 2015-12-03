@@ -91,7 +91,7 @@ public class RestaurantController {
                 .body(result);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    /*@PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/restaurant/{restaurantId}/rating",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -102,7 +102,7 @@ public class RestaurantController {
         return ResponseEntity.created(new URI("/api/rating/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert("rating", result.getId().toString()))
                 .body(result);
-    }
+    }*/
 
     /**
      * PUT  /restaurants -> Updates an existing restaurant.
@@ -152,7 +152,7 @@ public class RestaurantController {
                 .body(result);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    /*@PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/restaurant/{restaurantId}/rating/{ratingId}",
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -165,7 +165,7 @@ public class RestaurantController {
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert("rating", rating.getId().toString()))
                 .body(result);
-    }
+    }*/
 
     /**
      * GET  /restaurants -> get all the restaurants.
@@ -205,12 +205,12 @@ public class RestaurantController {
         return reviewService.findByRestaurant(restauranId);
     }
 
-    @RequestMapping(value = "/restaurant/{restauranId}/rating",
+    /*@RequestMapping(value = "/restaurant/{restauranId}/rating",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Rating getRestaurantRating(@PathVariable Long restauranId) {
         return ratingService.findByRestaurant(restauranId);
-    }
+    }*/
 
     /**
      * DELETE  /restaurants/:id -> delete the "id" restaurant.

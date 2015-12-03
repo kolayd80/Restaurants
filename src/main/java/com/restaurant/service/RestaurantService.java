@@ -34,7 +34,7 @@ public class RestaurantService {
     private AddressService addressService;
 
     @Autowired
-    private RatingService ratingService;
+    private ReviewService reviewService;
 
     public Restaurant save(Restaurant restaurant) {
 
@@ -55,7 +55,7 @@ public class RestaurantService {
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
         if (oldChain!=null) {
-            ratingService.setRatingForChain(oldChain);
+            reviewService.setRatingForChain(oldChain);
         }
 
         return savedRestaurant;
