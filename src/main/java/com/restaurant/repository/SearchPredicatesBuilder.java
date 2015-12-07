@@ -1,5 +1,7 @@
 package com.restaurant.repository;
 import com.mysema.query.types.expr.BooleanExpression;
+import com.restaurant.domain.QReview;
+import com.restaurant.domain.ReviewType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,7 @@ public class SearchPredicatesBuilder {
 
     public SearchPredicatesBuilder() {
         params = new ArrayList<SearchCriteria>();
+
     }
 
     public SearchPredicatesBuilder with(final String key, final String operation, final Object value) {
@@ -18,9 +21,9 @@ public class SearchPredicatesBuilder {
     }
 
     public BooleanExpression build() {
-        if (params.size() == 0) {
+        /*if (params.size() == 0) {
             return null;
-        }
+        }*/
 
         final List<BooleanExpression> predicates = new ArrayList<BooleanExpression>();
         SearchPredicate predicate;
@@ -32,12 +35,19 @@ public class SearchPredicatesBuilder {
             }
         }
 
-        BooleanExpression result = predicates.get(0);
-        for (int i = 1; i < predicates.size(); i++) {
-            result = result.and(predicates.get(i));
+        BooleanExpression result;
+        if (predicates.size() == 0) {
+            result = QReview.review.forMainRating.eq(true);
+        } else {
+            result = predicates.get(0);
+            for (int i = 1; i < predicates.size(); i++) {
+                result = result.and(predicates.get(i));
+            }
         }
 
         return result;
     }
+
+
 
 }

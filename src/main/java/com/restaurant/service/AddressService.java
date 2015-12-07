@@ -11,6 +11,8 @@ import com.restaurant.repository.SublocalityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AddressService {
 
@@ -69,4 +71,23 @@ public class AddressService {
         return streetRepository.save(street);
     }
 
+    public List<Country> findAllCountries() {
+        return countryRepository.findAll();
+    }
+
+    public Country findOneCountry(Long id) {
+        return countryRepository.findOne(id);
+    }
+
+    public List<Locality> findAllLocalitiesByCountry(Long id) {
+        return localityRepository.findByCountry(countryRepository.findOne(id));
+    }
+
+    public List<Sublocality> findAllSublocalitiesByLocality(Long id) {
+        return sublocalityRepository.findByLocality(localityRepository.findOne(id));
+    }
+
+    public List<Street> findAllStreetsBySublocality(Long id) {
+        return streetRepository.findBySublocality(sublocalityRepository.findOne(id));
+    }
 }

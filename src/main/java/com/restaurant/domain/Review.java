@@ -42,6 +42,9 @@ public class Review {
     @Column(name = "total")
     private Double total;
 
+    @Column(name = "for_main_rating")
+    private Boolean forMainRating;
+
     @OneToOne
     private Restaurant restaurant;
 
@@ -126,5 +129,13 @@ public class Review {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Boolean getForMainRating() {
+        return forMainRating;
+    }
+
+    public void setForMainRating(Boolean forMainRating) {
+        this.forMainRating = forMainRating;
     }
 }

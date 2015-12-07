@@ -4,7 +4,7 @@ angular.module('restaurantsApp', ['restaurants','ngRoute'])
     .config(['$routeProvider', function($routeProvider, $rootScope) {
         $routeProvider
             .when('/list', {templateUrl: 'views/list.html', controller: "ListCtrl"})
-            .when('/start', {templateUrl: 'views/start.html', controller: "StartCtrl"})
+            .when('/start', {templateUrl: 'views/start1.html', controller: "StartCtrl"})
             .when('/new', {templateUrl: 'views/edit.html', controller: "AddRestaurantCtrl"})
             .when('/edit/:id', {templateUrl: 'views/edit.html', controller: "EditRestaurantCtrl"})
             .when('/view/:id', {templateUrl: 'views/view.html', controller: "EditRestaurantCtrl"})

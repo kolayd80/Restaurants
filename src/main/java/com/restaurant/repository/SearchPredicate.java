@@ -2,13 +2,25 @@ package com.restaurant.repository;
 
 
 import com.mysema.query.types.expr.BooleanExpression;
+import static com.mysema.query.types.expr.BooleanExpression.anyOf;
 import com.mysema.query.types.path.NumberPath;
 import com.mysema.query.types.path.PathBuilder;
 import com.mysema.query.types.path.StringPath;
 import com.restaurant.domain.QReview;
 import com.restaurant.domain.Review;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+@Service
 public class SearchPredicate {
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     private SearchCriteria criteria;
 
@@ -40,6 +52,9 @@ public class SearchPredicate {
             final Long value = Long.parseLong(criteria.getValue().toString());
             BooleanExpression str = QReview.review.restaurant.street.id.eq(value);
             return str;
+        } else if (criteria.getKey().equals("filter")) {
+
+            return null;
         } else if (isNumeric(criteria.getValue().toString())) {
 
             final NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);

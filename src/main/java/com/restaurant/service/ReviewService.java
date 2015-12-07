@@ -1,10 +1,9 @@
 package com.restaurant.service;
 
+import com.mysema.query.types.Visitor;
 import com.mysema.query.types.expr.BooleanExpression;
-import com.restaurant.domain.Chain;
-import com.restaurant.domain.Restaurant;
-import com.restaurant.domain.Review;
-import com.restaurant.domain.ReviewType;
+import com.mysema.query.types.expr.BooleanOperation;
+import com.restaurant.domain.*;
 import com.restaurant.repository.ReviewRepository;
 import com.restaurant.repository.SearchPredicatesBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +52,9 @@ public class ReviewService {
         Restaurant restaurant = restaurantService.findOne(restaurantId);
         review.setRestaurant(restaurant);
         review.setReviewType(ReviewType.RESTAURANT);
+
+        review.setForMainRating(restaurant.getChain() == null);
+
         review.setTotal(Math.rint(100.0 * (0.4 * review.getKitchen() + 0.3 * review.getService() + 0.3 * review.getInterior())) / 100.0);
         Review savedReview = reviewRepository.save(review);
         Chain chain = restaurant.getChain();
@@ -99,6 +104,7 @@ public class ReviewService {
         Chain chain = chainService.findOne(chainId);
         review.setChain(chain);
         review.setReviewType(ReviewType.CHAIN);
+        review.setForMainRating(true);
         return reviewRepository.save(review);
     }
 
@@ -109,15 +115,47 @@ public class ReviewService {
     public Page<Review> findAllByQuerydsl(final String search, Pageable pageable) {
 
         final SearchPredicatesBuilder builder = new SearchPredicatesBuilder();
+        boolean filterExist = false;
+        BooleanExpression str = null;
         if (search != null) {
-            final Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+            final Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\S+?),");
             final Matcher matcher = pattern.matcher(search + ",");
             while (matcher.find()) {
-                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+                if (matcher.group(1).equals("filter")) {
+                    final String value = matcher.group(3);
+                    BooleanExpression strR = QReview.review.content.containsIgnoreCase(value).or(
+                            QReview.review.restaurant.name.containsIgnoreCase(value)).or(
+                            QReview.review.restaurant.labels.any().name.containsIgnoreCase(value));
+                    Iterable<Review> reviewsRestaurants = reviewRepository.findAll(strR);
+                    BooleanExpression strC = QReview.review.chain.name.containsIgnoreCase(value).or(
+                            QReview.review.chain.labels.any().name.containsIgnoreCase(value));
+                    Iterable<Review> reviewsChains = reviewRepository.findAll(strC);
+
+                    Collection<Review> reviews = new ArrayList<Review>();
+                    for (Review review : reviewsRestaurants) {
+                        if (!reviews.contains(review)) {
+                            reviews.add(review);
+                        }
+                    }
+
+                    for (Review review : reviewsChains) {
+                        if (!reviews.contains(review)) {
+                            reviews.add(review);
+                        }
+                    }
+
+                    str = QReview.review.in(reviews);
+                    filterExist = true;
+                } else {
+                    builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+                }
             }
         }
-        final BooleanExpression exp = builder.build();
+        BooleanExpression exp = builder.build();
 
+        if (filterExist) {
+            exp = exp.and(str);
+        }
         return reviewRepository.findAll(exp, pageable);
     }
 }

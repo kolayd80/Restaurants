@@ -122,12 +122,37 @@ app.factory("CommonRating", function ($resource) {
 });*/
 
 app.factory("CommonReview", function ($resource) {
-    return $resource('/api/review/:id', {id: "@id"}, {
+    return $resource('/api/review/search/:id', {id: "@id"}, {
         query: {params: {
+            search: "@search",
             page: "@page",
             per_page: "@perpage",
             sortby: "@sortby"
         }},
+        update: {method:'PUT'},
+    });
+});
+
+app.factory("Country", function ($resource) {
+    return $resource('/api/location/country/:id', {id: "@id"}, {
+        update: {method:'PUT'},
+    });
+});
+
+app.factory("Locality", function ($resource) {
+    return $resource('/api/location/country/:countryId/locality/:localityId', {countryId:"@countryId", localityId: "@localityId"}, {
+        update: {method:'PUT'},
+    });
+});
+
+app.factory("Sublocality", function ($resource) {
+    return $resource('/api/location/locality/:localityId/sublocality/:sublocalityId', {localityId:"@localityId", sublocalityId: "@sublocalityId"}, {
+        update: {method:'PUT'},
+    });
+});
+
+app.factory("Street", function ($resource) {
+    return $resource('/api/location/sublocality/:sublocalityId/street/:streetId', {sublocalityId:"@sublocalityId", streetId: "@streetId"}, {
         update: {method:'PUT'},
     });
 });
@@ -855,7 +880,7 @@ app.controller("StartCtrl", function ($scope, Restaurant, CommonReview) {
                 });
                 $scope.restaurants = listOfRestaurants;
 
-                var reviewsTop = CommonReview.query({"page": 0, "per_page": 10, "sortby": 'total'}, function () {
+                var reviewsTop = CommonReview.query({"search": "", "page": 0, "per_page": 10, "sortby": 'total'}, function () {
                     $scope.reviews = reviewsTop.content;
                 });
 
@@ -901,7 +926,7 @@ app.controller("StartCtrl", function ($scope, Restaurant, CommonReview) {
                     }
                 });
                 $scope.restaurants = listOfRestaurants;
-                var reviewsTop = CommonReview.query({"page": 0, "per_page": 10, "sortby": 'total'}, function () {
+                var reviewsTop = CommonReview.query({"search": "", "page": 0, "per_page": 10, "sortby": 'total'}, function () {
                     $scope.reviews = reviewsTop.content;
                 });
             });
@@ -919,17 +944,33 @@ app.controller("StartCtrl", function ($scope, Restaurant, CommonReview) {
 
 });
 
-app.controller("ListCtrl", function ($scope, Restaurant, Label, CLabel, CommonReview) {
+app.controller("ListCtrl", function ($scope, Restaurant, Label, CLabel, CommonReview, Country, Locality, Sublocality, Street) {
 
     function init() {
         $scope.orderBy = 'total';
         $scope.pageNum = 0;
+        $scope.countryList = Country.query();
+        $scope.flSearch = "";
         getItems();
     }
 
     function getItems() {
 
-            var reviews = CommonReview.query({"page": $scope.pageNum, "per_page": 10, "sortby": $scope.orderBy}, function () {
+        var searchText = "";
+        if ($scope.flSearch != "") {
+            searchText = "filter:" + $scope.flSearch + ",";
+        }
+        if ($scope.flStreet != null) {
+            searchText = searchText + "street:" + $scope.flStreet.id;
+        } else if ($scope.flSublocality != null) {
+            searchText = searchText + "sublocality:" + $scope.flSublocality.id;
+        } else if ($scope.flLocality != null) {
+            searchText = searchText + "locality:" + $scope.flLocality.id;
+        } else if ($scope.flCountry != null) {
+            searchText = searchText + "country:" + $scope.flCountry.id;
+        }
+
+            var reviews = CommonReview.query({"search": searchText, "page": $scope.pageNum, "per_page": 10, "sortby": $scope.orderBy}, function () {
                 var items = reviews.content;
                 for(var i in items) {
                     var item = items[i];
@@ -993,6 +1034,60 @@ app.controller("ListCtrl", function ($scope, Restaurant, Label, CLabel, CommonRe
 
     $scope.showPage = function(pageToShow) {
         $scope.pageNum = pageToShow;
+        getItems();
+    }
+
+    $scope.viewItem = function(item) {
+        if (item.reviewType=='RESTAURANT') {
+            location.href = "#/view/" + item.restaurant.id;
+        } else {
+            location.href = "#/viewchain/" + item.chain.id;
+        }
+    }
+
+    $scope.selectCountry = function() {
+        $scope.flLocality = null;
+        $scope.flSublocality = null;
+        $scope.flStreet = null;
+        getItems();
+        if ($scope.flCountry==null) {
+
+        } else {
+            $scope.localityList = Locality.query({"countryId": $scope.flCountry.id});
+        }
+    }
+
+    $scope.selectLocality = function() {
+        $scope.flSublocality = null;
+        $scope.flStreet = null;
+        getItems();
+        if ($scope.flLocality==null) {
+
+        } else {
+            $scope.sublocalityList = Sublocality.query({"localityId": $scope.flLocality.id});
+        }
+    }
+
+    $scope.selectSublocality = function() {
+        $scope.flStreet = null;
+        getItems();
+        if ($scope.flSublocality==null) {
+
+        } else {
+            $scope.streetList = Street.query({"sublocalityId": $scope.flSublocality.id});
+        }
+    }
+
+    $scope.selectStreet = function() {
+        getItems();
+        if ($scope.flStreet==null) {
+
+        } else {
+
+        }
+    }
+
+    $scope.selectSearch = function() {
         getItems();
     }
 

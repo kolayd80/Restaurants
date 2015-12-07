@@ -13,14 +13,14 @@
                         <a ng-click="sortBy('popularity')">Popularity</a>
                     </th>
                 </tr>
-                <tr ng-repeat="item in items" class="item-row">
+                <tr ng-repeat="item in items" class="item-row" ng-click="viewItem(item)">
                     <td class="item-image">
                         <img ng-if="item.reviewType=='RESTAURANT'" ng-src="{{item.restaurant.previewImage}}" />
                         <img ng-if="item.reviewType=='CHAIN'" ng-src="{{item.chain.previewImage}}" />
                     </td>
                     <td class="item-title">
-                        <a ng-if="item.reviewType=='RESTAURANT'" href="#/view/{{item.restaurant.id}}">{{item.restaurant.name}}</a>
-                        <a ng-if="item.reviewType=='CHAIN'" href="#/viewchain/{{item.chain.id}}">{{item.chain.name}}</a>
+                        <span class="item-name" ng-if="item.reviewType=='RESTAURANT'">{{item.restaurant.name}}</span>
+                        <span class="item-name" ng-if="item.reviewType=='CHAIN'">{{item.chain.name}}</span>
                         <br>
                         <span ng-repeat="label in item.labels" class="label label-success">{{label.name}}</span>
                     </td>
@@ -37,6 +37,46 @@
         </div>
     </div>
     <div class="col-md-4">
+        <div class="text-fl-filter">
+            Filter
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+            <div class="fl-filter input-group input-group-lg add-on">
+                <input type="text" class="form-control search-query" ng-model="flSearch" ng-change="selectSearch()"
+                       placeholder="Search">
 
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit" ng-onclick="selectSearch()"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="text-fl-location">
+            Location
+        </div>
+        <div class="fl-location">
+            <div class="col-md-6">
+            <select class="form-control input-lg pull-right" id="select_country" ng-change="selectCountry()" ng-model="flCountry"
+                    ng-options="country as country.name for country in countryList track by country.id">
+                <option value="">Choose a country</option>
+            </select>
+            <br>
+            <select class="form-control input-lg pull-right" id="select_locality" ng-change="selectLocality()" ng-show="flCountry!=null" ng-model="flLocality"
+                    ng-options="locality as locality.name for locality in localityList track by locality.id">
+                <option value="">Choose a locality</option>
+            </select>
+            <br>
+            <select class="form-control input-lg pull-right" id="select_sublocality" ng-change="selectSublocality()" ng-show="flLocality!=null" ng-model="flSublocality"
+                    ng-options="sublocality as sublocality.name for sublocality in sublocalityList track by sublocality.id">
+                <option value="">Choose a sublocality</option>
+            </select>
+            <br>
+            <select class="form-control input-lg pull-right" id="select_street" ng-change="selectStreet()" ng-show="flSublocality!=null" ng-model="flStreet"
+                    ng-options="street as street.name for street in streetList track by street.id">
+                <option value="">Choose a street</option>
+            </select>
+                </div>
+        </div>
     </div>
 </div>
