@@ -13,5 +13,6 @@ angular.module('restaurantsApp', ['restaurants','ngRoute'])
             .when('/viewchain/:id', {templateUrl: 'views/viewchain.html', controller: "EditChainCtrl"})
             .when('/login', {templateUrl: 'views/login.html', controller: "LoginCtrl"})
             .otherwise({redirectTo: '/start'});
+
     },
     ]);

@@ -27,7 +27,7 @@ body {
 #mapContainer {
 	margin: 2% auto;
 	position:relative;
-	height: 800px;
+	height: 300px;
 	width: 100%;
 	border:10px solid #eaeaea;	
 }

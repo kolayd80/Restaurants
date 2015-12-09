@@ -20,7 +20,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "content", length=1000)
+    @Column(name = "content", length=10000)
     private String content;
 
     @Enumerated(EnumType.STRING)

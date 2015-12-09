@@ -1,141 +1,96 @@
-<div class="modal-header">
-    <h4 class="modal-title" id="myRestaurantLabel" >{{restaurant.name}}</h4>
-</div>
 
-
-<div class="container">
-    <div class="offsetspan6">
-        <uib-carousel interval=100000>
-            <uib-slide ng-repeat="slide in slides" active="slide.active">
-                <img class="image-circle" ng-src="{{slide.name}}"    style="margin:auto;"/>
-                <div class="carousel-caption">
-                    <p>{{slide.review}}</p>
-                </div>
-
-            </uib-slide>
-        </uib-carousel>
+<main class="container">
+    <div class="page_title_container">
+        <h1>{{restaurant.name}}</h1>
     </div>
-</div>
+    <div class="slider">
+        <div class="offsetspan6">
+            <uib-carousel interval=100000>
+                <uib-slide ng-repeat="slide in slides" active="slide.active">
+                    <img class="image-circle" ng-src="{{slide.name}}"    style="margin:auto;"/>
+                    <div class="carousel-caption">
+                        <p>{{slide.review}}</p>
+                    </div>
 
-<form>
+                </uib-slide>
+            </uib-carousel>
+        </div>
+    </div>
+    <div class="ratings_wrapper">
+        <div class="ratings_box_kitchen ratings_box">
+            <h3>KITCHEN</h3>
+            <div id="kitchen_blank"></div> <!--блок пустых звезд-->
+            <div id="kitchen_hover"></div> <!--блок  звезд при наведении мышью-->
+            <div id="kitchen_votes"></div> <!--блок с итогами голосов -->
+        </div>
+        <div class="ratings_box_service ratings_box">
+            <h3>SERVICE</h3>
+            <div id="service_blank"></div> <!--блок пустых звезд-->
+            <div id="service_hover"></div> <!--блок  звезд при наведении мышью-->
+            <div id="service_votes"></div> <!--блок с итогами голосов -->
+        </div>
+        <div class="ratings_box_interior ratings_box">
+            <h3>INTERIOR</h3>
+            <div id="interior_blank"></div> <!--блок пустых звезд-->
+            <div id="interior_hover"></div> <!--блок  звезд при наведении мышью-->
+            <div id="interior_votes"></div> <!--блок с итогами голосов -->
+        </div>
 
-    <div class="modal-body">
-        <jh-alert-error></jh-alert-error>
+    </div>
 
 
-        <!--<div class="form-group">
-            <label for="id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
-                   ng-model="restaurant.id" readonly>
-        </div>-->
-        <!--<div class="form-group">
-            <label for="field_name">Name</label>
-            <input type="text" class="form-control" name="name" id="field_name"
-                   ng-model="restaurant.name"
-                    >
-        </div>-->
-        <!--<div class="form-group">
-            <label for="field_label">Label</label>
-            <input type="text" class="form-control" name="review" id="field_label"
-                   ng-model="restaurant.label"
-                    >
-        </div>-->
-        <div class="labels">
-            <h4> <span class="label label-success" >{{restaurant.label}}</span></h4>
+
+
+
+    <div class="review_labels" >
+        <span ng-repeat="label in labels" class="label label-success">{{label.name}}</span>
+    </div>
+
+    <div class="review_content">
+        <div class="review_content_text" ng-bind-html="reviewHtml">
+
+        </div>
+        <div class="review_content_date">
+            <p>{{reviewDate}}</p>
         </div>
 
 
-        <table>
+    </div>
+
+
+
+    <!-- Your share button code -->
+    <div class="fb-share-button"
+         data-href="http://localhost:8080/index.html#/view/59"
+         data-layout="button_count">
+    </div>
+
+
+
+    <div class="review_details">
+        <table class="review_details_table">
             <tr>
-                <th>Kitchen</th>
-                <th>Interior</th>
-                <th>Service</th>
+                <th>Total rating</th>
+                <td>{{review.total}}</td>
+            </tr>
+            <tr ng-if="review.restaurant.chain !== null">
+                <th>Chain</th>
+                <td><a href="#/viewchain/{{review.restaurant.chain.id}}">{{review.restaurant.chain.name}}</a></td>
             </tr>
             <tr>
-                <td>
-                    <div id="rating_blank"></div> <!--блок пустых звезд-->
-                    <div id="rating_hover"></div> <!--блок  звезд при наведении мышью-->
-                    <div id="rating_votes"></div> <!--блок с итогами голосов -->
-                </td>
-                <td>
-                    <div id="interior_blank"></div> <!--блок пустых звезд-->
-                    <div id="interior_hover"></div> <!--блок  звезд при наведении мышью-->
-                    <div id="interior_votes"></div> <!--блок с итогами голосов -->
-                </td>
-                <td>
-                    <div id="service_blank"></div> <!--блок пустых звезд-->
-                    <div id="service_hover"></div> <!--блок  звезд при наведении мышью-->
-                    <div id="service_votes"></div> <!--блок с итогами голосов -->
-                </td>
+                <th>Address</th>
+                <td>{{review.restaurant.address}}</td>
             </tr>
+
         </table>
 
-
-
-    </div>
-
-
-        <div class="form-textarea-group">
-            <label for="field_review">Review</label>
-            <textarea rows="6" class="form-control" name="review" id="field_review"
-                   ng-model="restaurant.review"
-                    >
-            </textarea>
-        </div>
-        <!--<div class="form-group">
-            <label for="field_kitchenrating">Kitchen rating</label>
-            <input type="number" class="form-control" name="kitchenrating" id="field_kitchenrating"
-                   ng-model="restaurant.kitchenrating"
-                   required>
-
-            <div ng-show="editForm.kitchenrating.$invalid">
-                <p class="help-block"
-                   ng-show="editForm.kitchenrating.$error.required">
-                    This field is required.
-                </p>
-
-                <p class="help-block"
-                   ng-show="editForm.kitchenrating.$error.number">
-                    This field should be a number.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="field_interiorrating">Interior rating</label>
-            <input type="number" class="form-control" name="interiorrating" id="field_interiorrating"
-                   ng-model="restaurant.interiorrating"
-                   required>
-
-            <div ng-show="editForm.interiorrating.$invalid">
-                <p class="help-block"
-                   ng-show="editForm.interiorrating.$error.required">
-                    This field is required.
-                </p>
-
-                <p class="help-block"
-                   ng-show="editForm.interiorrating.$error.number">
-                    This field should be a number.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="field_servicerating">Service rating</label>
-            <input type="number" class="form-control" name="servicerating" id="field_servicerating"
-                   ng-model="restaurant.servicerating"
-                   required>
-
-            <div ng-show="editForm.servicerating.$invalid">
-                <p class="help-block"
-                   ng-show="editForm.servicerating.$error.required">
-                    This field is required.
-                </p>
-
-                <p class="help-block"
-                   ng-show="editForm.interiorrating.$error.number">
-                    This field should be a number.
-                </p>
-            </div>
-        </div>-->
         <div id="mapContainer"></div>
     </div>
-</form>
+
+
+</main>
+
+
+
+
+

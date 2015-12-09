@@ -40,8 +40,8 @@ public class PhotoService {
     public List<Photo> findPhoto(Long restaurantId){
         List<Photo> photos = photoRepository.findByRestaurant(restaurantService.findOne(restaurantId));
         for (Photo photo:photos) {
-            photo.setName(photo.getName().replace("src/main/webapp/", "http://localhost:8080/"));
-            //photo.setName(photo.getName());
+            //photo.setName(photo.getName().replace("src/main/webapp/", "http://localhost:8080/"));
+            photo.setName(photo.getName());
         }
         return photos;
     }
@@ -49,8 +49,8 @@ public class PhotoService {
     public List<Photo> findPhotoByChain(Long chainId){
         List<Photo> photos = photoRepository.findByChain(chainService.findOne(chainId));
         for (Photo photo:photos) {
-            photo.setName(photo.getName().replace("src/main/webapp/", "http://localhost:8080/"));
-            //photo.setName(photo.getName());
+            //photo.setName(photo.getName().replace("src/main/webapp/", "http://localhost:8080/"));
+            photo.setName(photo.getName());
         }
         return photos;
     }

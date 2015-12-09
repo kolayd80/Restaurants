@@ -56,6 +56,12 @@ app.factory("Restaurant", function ($resource) {
     });
 });
 
+app.factory("RestaurantsOfChain", function ($resource) {
+    return $resource('/api/restaurants/chain/:chainId', {chainId: "@chainId"}, {
+        query: {method:'GET', isArray:true},
+    });
+});
+
 app.factory("Photo", function ($resource) {
     return $resource('/api/photo/restaurant/:id', {id: "@id"}, {
         query: {method:'GET', isArray:true},
@@ -169,7 +175,9 @@ app.factory("LoginService", function ($resource) {
     );
 });
 
-app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Restaurant, Photo, Label, Review, Chain) {
+app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, $sce, Restaurant, Photo, Label, Review, Chain) {
+
+
 
     function init() {
         var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function(){
@@ -202,17 +210,49 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, Rest
 
         $scope.labels = Label.query({"restaurantId": $routeParams.id});
 
-        $scope.review = Review.get({"restaurantId": $routeParams.id});
+        var itemReview = Review.get({"restaurantId": $routeParams.id}, function(){
+            var kitchenrating = itemReview.kitchen;
+            var kitchen_star_width = kitchenrating*16 + Math.ceil(kitchenrating);
+            $('#kitchen_votes').width(kitchen_star_width);
+            var interiorrating = itemReview.interior;
+            var interior_star_width = interiorrating*16 + Math.ceil(interiorrating);
+            $('#interior_votes').width(interior_star_width);
+            var servicerating = itemReview.service;
+            var service_star_width = servicerating*16 + Math.ceil(servicerating);
+            $('#service_votes').width(service_star_width);
 
-        var kitchenrating = $scope.review.kitchen;
-        var kitchen_star_width = kitchenrating*16 + Math.ceil(kitchenrating);
-        $('#rating_votes').width(kitchen_star_width);
-        var interiorrating = $scope.review.interior;
-        var interior_star_width = interiorrating*16 + Math.ceil(interiorrating);
-        $('#interior_votes').width(interior_star_width);
-        var servicerating = $scope.review.service;
-        var service_star_width = servicerating*16 + Math.ceil(servicerating);
-        $('#service_votes').width(service_star_width);
+            $scope.reviewHtml = $sce.trustAsHtml(itemReview.content);
+
+            var formattedDate = itemReview.createdDate[0] + '-';
+            for (var j in itemReview.createdDate) {
+                if (j > 0) {
+                    var str = '00' + itemReview.createdDate[j];
+                    str = str.substr(str.length - 2);
+                    formattedDate = formattedDate + str;
+                    if (j == 1) {
+                        formattedDate = formattedDate + '-';
+                    }
+                    if (j == 2) {
+                        formattedDate = formattedDate + ' ';
+                    }
+                    if (j == 3) {
+                        formattedDate = formattedDate + ':';
+                    }
+                    if (j == 4) {
+                        formattedDate = formattedDate + ':';
+                    }
+                    if (j == 5) {
+                        break;
+                    }
+                }
+            }
+
+            $scope.reviewDate = "Posted: " + formattedDate;
+        });
+
+        $scope.review = itemReview;
+
+
 
         // Set of Photos
         $scope.slides = Photo.query({"id": $routeParams.id});
@@ -606,16 +646,149 @@ app.controller("LoginCtrl", function ($scope, $rootScope, $location, $http, $coo
 
 });
 
-app.controller("EditChainCtrl", function ($scope, $http, $routeParams, Chain, CLabel, CReview, CPhoto) {
+app.controller("EditChainCtrl", function ($scope, $http, $routeParams, $sce, Chain, CLabel, CReview, CPhoto, RestaurantsOfChain) {
 
     function init() {
         $scope.chain = Chain.get({"id": $routeParams.id});
 
         $scope.labels = CLabel.query({"chainId": $routeParams.id});
 
-        $scope.review = CReview.get({"chainId": $routeParams.id});
+
+
+        var itemReview = CReview.get({"chainId": $routeParams.id}, function(){
+            var kitchenrating = itemReview.kitchen;
+            var kitchen_star_width = kitchenrating*16 + Math.ceil(kitchenrating);
+            $('#kitchen_votes').width(kitchen_star_width);
+            var interiorrating = itemReview.interior;
+            var interior_star_width = interiorrating*16 + Math.ceil(interiorrating);
+            $('#interior_votes').width(interior_star_width);
+            var servicerating = itemReview.service;
+            var service_star_width = servicerating*16 + Math.ceil(servicerating);
+            $('#service_votes').width(service_star_width);
+
+            $scope.reviewHtml = $sce.trustAsHtml(itemReview.content);
+
+            var formattedDate = itemReview.createdDate[0] + '-';
+            for (var j in itemReview.createdDate) {
+                if (j > 0) {
+                    var str = '00' + itemReview.createdDate[j];
+                    str = str.substr(str.length - 2);
+                    formattedDate = formattedDate + str;
+                    if (j == 1) {
+                        formattedDate = formattedDate + '-';
+                    }
+                    if (j == 2) {
+                        formattedDate = formattedDate + ' ';
+                    }
+                    if (j == 3) {
+                        formattedDate = formattedDate + ':';
+                    }
+                    if (j == 4) {
+                        formattedDate = formattedDate + ':';
+                    }
+                    if (j == 5) {
+                        break;
+                    }
+                }
+            }
+
+            $scope.reviewDate = "Posted: " + formattedDate;
+        });
+
+        $scope.review = itemReview;
 
         $scope.slides = CPhoto.query({"id": $routeParams.id});
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+
+                var coords = new google.maps.LatLng(latitude, longitude);
+                var mapOptions = {
+                    zoom: 15,
+                    center: coords,
+                    mapTypeControl: true,
+                    navigationControlOptions: {
+                        style: google.maps.NavigationControlStyle.SMALL
+                    },
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                mapOfRestaurants = new google.maps.Map(
+                    document.getElementById("mapContainer"), mapOptions
+                );
+                var i;
+                for (i in markers) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+
+                var re;
+                var listOfRestaurants = RestaurantsOfChain.query({"chainId": $routeParams.id}, function () {
+                    for (re in listOfRestaurants) {
+                        var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
+                        var newMarker = new google.maps.Marker({
+                            position: latlng,
+                            map: mapOfRestaurants,
+                            title: listOfRestaurants[re].name
+                        });
+                        var markerUrl = 'index.html#/view/' + listOfRestaurants[re].id;
+                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
+                            return function () {
+                                document.location = markerUrl;
+                            }
+                        }(markerUrl));
+                        markers.push(newMarker);
+                    }
+                });
+                $scope.restaurants = listOfRestaurants;
+
+            }, function (err){
+                var latitude = 46.4879;
+                var longitude = 30.7409;
+
+                var coords = new google.maps.LatLng(latitude, longitude);
+                var mapOptions = {
+                    zoom: 15,
+                    center: coords,
+                    mapTypeControl: true,
+                    navigationControlOptions: {
+                        style: google.maps.NavigationControlStyle.SMALL
+                    },
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                mapOfRestaurants = new google.maps.Map(
+                    document.getElementById("mapContainer"), mapOptions
+                );
+                var i;
+                for (i in markers) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+
+                var re;
+                var listOfRestaurants = RestaurantsOfChain.query({"chainId": $routeParams.id}, function () {
+                    for (re in listOfRestaurants) {
+                        var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
+                        var newMarker = new google.maps.Marker({
+                            position: latlng,
+                            map: mapOfRestaurants,
+                            title: listOfRestaurants[re].name
+                        });
+                        var markerUrl = 'index.html#/view/' + listOfRestaurants[re].id;
+                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
+                            return function () {
+                                document.location = markerUrl;
+                            }
+                        }(markerUrl));
+                        markers.push(newMarker);
+                    }
+                });
+                $scope.restaurants = listOfRestaurants;
+            })};
+
+
+
 
     }
 

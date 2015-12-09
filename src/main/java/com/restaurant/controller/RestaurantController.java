@@ -4,6 +4,7 @@ import com.restaurant.controller.util.HeaderUtil;
 import com.restaurant.domain.Label;
 import com.restaurant.domain.Restaurant;
 import com.restaurant.domain.Review;
+import com.restaurant.service.ChainService;
 import com.restaurant.service.LabelService;
 import com.restaurant.service.RestaurantService;
 import com.restaurant.service.ReviewService;
@@ -42,6 +43,9 @@ public class RestaurantController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private ChainService chainService;
 
     /**
      * POST  /restaurants -> Create a new restaurant.
@@ -184,6 +188,13 @@ public class RestaurantController {
                         restaurant,
                         HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @RequestMapping(value = "/restaurants/chain/{chainId}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Restaurant> getRestaurantsOfChain(@PathVariable Long chainId) {
+        return restaurantService.findByChain(chainService.findOne(chainId));
     }
 
     @RequestMapping(value = "/restaurant/{restauranId}/label",
