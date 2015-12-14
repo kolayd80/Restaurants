@@ -248,29 +248,29 @@ public class RestaurantController {
                                  @RequestParam("idRestaurant") Long restaurantId) throws IOException {
 
 
-//        Map uploadResult = Singleton.getCloudinary().uploader().upload(file.getBytes(),
-//                ObjectUtils.asMap("resource_type", "auto"));
-//        restaurantService.savePreview(restaurantId, (String) uploadResult.get("url"));
+        Map uploadResult = Singleton.getCloudinary().uploader().upload(file.getBytes(),
+                ObjectUtils.asMap("resource_type", "auto"));
+        restaurantService.savePreview(restaurantId, (String) uploadResult.get("url"));
 
-        String name = "src/main/webapp/photo/";
-        UUID fileUuid = UUID.randomUUID();
-        name = name+fileUuid+".jpg";
-        if (!file.isEmpty()) {
-            try {
-                byte[] bytes = file.getBytes();
-                BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(new File(name)));
-                stream.write(bytes);
-                stream.close();
-
-                restaurantService.savePreview(restaurantId, name);
-
-            } catch (Exception e) {
-                //return "You failed to upload " + name + " => " + e.getMessage();
-            }
-        } else {
-            //return "You failed to upload " + name + " because the file was empty.";
-        }
+//        String name = "src/main/webapp/photo/";
+//        UUID fileUuid = UUID.randomUUID();
+//        name = name+fileUuid+".jpg";
+//        if (!file.isEmpty()) {
+//            try {
+//                byte[] bytes = file.getBytes();
+//                BufferedOutputStream stream =
+//                        new BufferedOutputStream(new FileOutputStream(new File(name)));
+//                stream.write(bytes);
+//                stream.close();
+//
+//                restaurantService.savePreview(restaurantId, name);
+//
+//            } catch (Exception e) {
+//                //return "You failed to upload " + name + " => " + e.getMessage();
+//            }
+//        } else {
+//            //return "You failed to upload " + name + " because the file was empty.";
+//        }
     }
 
 }
