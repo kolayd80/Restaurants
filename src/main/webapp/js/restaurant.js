@@ -8,6 +8,7 @@ var xAuthTokenHeaderName = 'x-auth-token';
 var app = angular.module("restaurants", ["ngResource", "ngCookies", "ui.bootstrap"]).run(function($rootScope, $http, $location, $cookieStore, LoginService) {
 
     $rootScope.enforceAdminControls = false;
+    $rootScope.editablePage = false;
 
     /* Reset error when a new view is loaded */
     $rootScope.$on('$viewContentLoaded', function() {
@@ -36,6 +37,20 @@ var app = angular.module("restaurants", ["ngResource", "ngCookies", "ui.bootstra
         $location.path("/login");
     };
 
+    $rootScope.restaurantsList = function() {
+        $location.path("/restaurants");
+    };
+
+    $rootScope.chainsList = function() {
+        $location.path("/chains");
+    };
+
+    $rootScope.edit = function() {
+        var originalPath = $location.path();
+        var newPath = "#" + originalPath.replace("/view", "/edit");
+        document.location = newPath;
+    };
+
     // Todo: monitor if the token is revoked / expired
     /* Try getting valid user from cookie or go to login page */
     var originalPath = $location.path();
@@ -47,6 +62,17 @@ var app = angular.module("restaurants", ["ngResource", "ngCookies", "ui.bootstra
 
         $location.path(originalPath);
     }
+
+    var onlyLoggedIn = function ($location, $q) {
+        var deferred = $q.defer();
+        if (user !== undefined) {
+            deferred.resolve();
+        } else {
+            deferred.reject();
+            $location.url('/login');
+        }
+        return deferred.promise;
+    };
 
 });
 
@@ -175,11 +201,29 @@ app.factory("LoginService", function ($resource) {
     );
 });
 
-app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, $sce, Restaurant, Photo, Label, Review, Chain) {
+app.controller("EditRestaurantCtrl", function ($scope, $http, $rootScope, $routeParams, $sce, $timeout, Restaurant, Photo, Label, Review, Chain) {
 
 
+    function fb(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+        fjs.parentNode.insertBefore(js, fjs);
+
+
+
+    };
 
     function init() {
+
+        $rootScope.editablePage = true;
+
+        fb(document, 'script', 'facebook-jssdk');
+
+
+
+
         var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function(){
             var itemLatitude = itemRestaurant.latitude;
             var itemLongitude = itemRestaurant.longitude;
@@ -248,6 +292,14 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, $sce
             }
 
             $scope.reviewDate = "Posted: " + formattedDate;
+
+
+            $timeout(function(){
+                FB.XFBML.parse();
+            }, 1000);
+
+
+
         });
 
         $scope.review = itemReview;
@@ -285,11 +337,13 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, $sce
                 });
                 return fd;
             }
+        }).success(function() {
+            $scope.slides = Photo.query({"id": $routeParams.id});
         });
     };
 
     $scope.uploadPreviewImage = function () {
-        return $http({
+        $http({
             method: 'POST',
             url: '/api/preview/upload',
             headers: {
@@ -306,7 +360,35 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, $sce
                 });
                 return fd;
             }
+        }).success(function() {
+            var tempRestaurant = Restaurant.get({"id": $routeParams.id}, function() {
+                document.getElementById('resto_preview_img').setAttribute('src', tempRestaurant.previewImage);
+                $scope.restaurant.previewImage = tempRestaurant.previewImage;
+            });
         });
+
+
+    };
+
+    $scope.deletePreviewImage = function () {
+        $scope.restaurant.previewImage = "";
+        document.getElementById('resto_preview_img').removeAttribute('src');
+    };
+
+    $scope.deletePhoto = function () {
+        if ($scope.slides.length > 0) {
+            for (var slideId in $scope.slides) {
+                if ($scope.slides[slideId].active) {
+                    $http({
+                        method: 'DELETE',
+                        url: '/api/photo/' + $scope.slides[slideId].id
+                    }).success(function() {
+                        $scope.slides = Photo.query({"id": $routeParams.id});
+                    });
+                    break;
+                }
+            }
+        }
     };
 
     $scope.deleteLabel = function(label) {
@@ -371,17 +453,63 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $routeParams, $sce
             } else {
                 rating.$update({"restaurantId":restaurant.id, "ratingId":$scope.rating.id});
             };*/
+            document.location="#/list";
         });
-        document.location="#/list";
+
+    };
+
+    $scope.addEditor = function(tag) {
+        var obj = document.getElementById('field_review');
+        if(document.selection) obj.value += "<" + tag + "></" + tag + ">";
+        else if(typeof(obj.selectionStart) == "number")
+        {
+            var start = obj.selectionStart;
+            var end = obj.selectionEnd;
+            var value = obj.value;
+            obj.select();
+            if(start != end)
+            {
+                obj.value = value.substr(0,start) + "<" + tag + ">" + value.substr(start,end - start) + "</" + tag + ">" + value.substr(end);
+                obj.setSelectionRange(start,end + tag.length * 2 + 5);
+                $scope.review.content = obj.value;
+            }
+            else
+            {
+                obj.value = value.substr(0,start) + "<" + tag + "></" + tag + ">" + value.substr(start);
+                obj.setSelectionRange(start + tag.length + 2,start + tag.length + 2);
+            }
+        }
+    };
+
+    $scope.createLabel = function() {
+        var obj = document.getElementById('field_review');
+        if(!document.selection && typeof(obj.selectionStart) == "number") {
+            var start = obj.selectionStart;
+            var end = obj.selectionEnd;
+            var value = obj.value;
+            if(start != end) {
+                var labelValue = value.substr(start,end - start);
+                $scope.labels.push({
+                    id: null,
+                    name: labelValue,
+                    restaurant: Restaurant
+                });
+            }
+        }
     };
 
     init();
 
 });
 
-app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, Review, Chain) {
+app.controller("AddRestaurantCtrl", function ($scope, $http, $rootScope, Restaurant, Label, Review, Chain) {
+
+    var map;
 
     function init() {
+
+        $rootScope.editablePage = false;
+
         function errorNavigator(err) {
             alert('err');
             if(err.code == 1) {
@@ -407,7 +535,7 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
                     },
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
-                var map = new google.maps.Map(
+                map = new google.maps.Map(
                     document.getElementById("mapContainer"), mapOptions
                 );
                 marker = new google.maps.Marker({
@@ -430,7 +558,7 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
                     },
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
-                var map = new google.maps.Map(
+                map = new google.maps.Map(
                     document.getElementById("mapContainer"), mapOptions
                 );
                 marker = new google.maps.Marker({
@@ -456,6 +584,15 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
 
         $scope.itemsList = Chain.query();
 
+        $scope.result1 = '';
+        $scope.options1 = null;
+        $scope.details1 = '';
+
+    }
+
+    $scope.newCenterMap = function (details) {
+        map.setCenter(details.geometry.location);
+        marker.setPosition(details.geometry.location);
     }
 
     $scope.forceClearChain = function () {
@@ -485,145 +622,123 @@ app.controller("AddRestaurantCtrl", function ($scope, $http, Restaurant, Label, 
             };
 
             var review = new Review($scope.review);
-            review.$save({"restaurantId":restaurant.id});
+            review.$save({"restaurantId":restaurant.id}, function() {
+                document.location="#/edit/" + restaurant.id;
+            });
 
             /*var rating = new Rating($scope.rating);
             rating.$save({"restaurantId":restaurant.id});*/
+
         });
 
 
-        document.location="#/list";
+
+    };
+
+    $scope.addEditor = function(tag) {
+        var obj = document.getElementById('field_review');
+        if(document.selection) obj.value += "<" + tag + "></" + tag + ">";
+        else if(typeof(obj.selectionStart) == "number")
+        {
+            var start = obj.selectionStart;
+            var end = obj.selectionEnd;
+            var value = obj.value;
+            obj.select();
+            if(start != end)
+            {
+                obj.value = value.substr(0,start) + "<" + tag + ">" + value.substr(start,end - start) + "</" + tag + ">" + value.substr(end);
+                obj.setSelectionRange(start,end + tag.length * 2 + 5);
+                $scope.review.content = obj.value;
+            }
+            else
+            {
+                obj.value = value.substr(0,start) + "<" + tag + "></" + tag + ">" + value.substr(start);
+                obj.setSelectionRange(start + tag.length + 2,start + tag.length + 2);
+            }
+        }
+    };
+
+    $scope.createLabel = function() {
+        var obj = document.getElementById('field_review');
+        if(!document.selection && typeof(obj.selectionStart) == "number") {
+            var start = obj.selectionStart;
+            var end = obj.selectionEnd;
+            var value = obj.value;
+            if(start != end) {
+                var labelValue = value.substr(start,end - start);
+                $scope.labels.push({
+                    id: null,
+                    name: labelValue,
+                    restaurant: Restaurant
+                });
+            }
+        }
     };
 
     init();
 
 });
 
-app.controller("RestaurantsCtrl", function ($scope, Restaurant, CommonReview) {
+app.controller("RestaurantsCtrl", function ($scope, $rootScope, Restaurant, CommonReview) {
 
     function init() {
+        $rootScope.editablePage = false;
         $scope.getRestaurants();
     }
 
     $scope.getRestaurants = function () {
 
-        function errorNavigator(err) {
-            alert('err');
-            if(err.code == 1) {
-                alert("Error: Access is denied!");
-            }
+        $scope.restaurants = Restaurant.query();
 
-            else if( err.code == 2) {
-                alert("Error: Position is unavailable!");
-            }
-        }
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-
-                var coords = new google.maps.LatLng(latitude, longitude);
-                var mapOptions = {
-                    zoom: 15,
-                    center: coords,
-                    mapTypeControl: true,
-                    navigationControlOptions: {
-                        style: google.maps.NavigationControlStyle.SMALL
-                    },
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                mapOfRestaurants = new google.maps.Map(
-                    document.getElementById("mapContainer"), mapOptions
-                );
-                var i;
-                for (i in markers) {
-                    markers[i].setMap(null);
-                }
-                markers = [];
-
-                var re;
-                var listOfRestaurants = Restaurant.query(function () {
-                    for (re in listOfRestaurants) {
-                        var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
-                        var newMarker = new google.maps.Marker({
-                            position: latlng,
-                            map: mapOfRestaurants,
-                            title: listOfRestaurants[re].name
-                        });
-                        var markerUrl = 'index.html#/edit/' + listOfRestaurants[re].id;
-                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
-                            return function () {
-                                document.location = markerUrl;
-                            }
-                        }(markerUrl));
-                        markers.push(newMarker);
-                    }
-                });
-                $scope.restaurants = listOfRestaurants;
-                $scope.reviews = CommonReview.query();
-            }, function (err){
-                var latitude = 46.4879;
-                var longitude = 30.7409;
-
-                var coords = new google.maps.LatLng(latitude, longitude);
-                var mapOptions = {
-                    zoom: 15,
-                    center: coords,
-                    mapTypeControl: true,
-                    navigationControlOptions: {
-                        style: google.maps.NavigationControlStyle.SMALL
-                    },
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                mapOfRestaurants = new google.maps.Map(
-                    document.getElementById("mapContainer"), mapOptions
-                );
-                var i;
-                for (i in markers) {
-                    markers[i].setMap(null);
-                }
-                markers = [];
-
-                var re;
-                var listOfRestaurants = Restaurant.query(function () {
-                    for (re in listOfRestaurants) {
-                        var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
-                        var newMarker = new google.maps.Marker({
-                            position: latlng,
-                            map: mapOfRestaurants,
-                            title: listOfRestaurants[re].name
-                        });
-                        var markerUrl = 'index.html#/edit/' + listOfRestaurants[re].id;
-                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
-                            return function () {
-                                document.location = markerUrl;
-                            }
-                        }(markerUrl));
-                        markers.push(newMarker);
-                    }
-                });
-                $scope.restaurants = listOfRestaurants;
-                $scope.reviews = CommonReview.query();
-            });
-
-
-        } else {
-            alert("Geolocation API не поддерживается в вашем браузере");
-        }
-        ;
     };
 
     $scope.deleteRestaurant = function (id) {
-        Restaurant.delete({"id":id});
-        $scope.restaurants = Restaurant.query();
+        Restaurant.delete({"id":id}, function() {
+            $scope.restaurants = Restaurant.query();
+        });
+
     };
 
-    $scope.createRestaurant = function () {
-        var restaurant = new Restaurant($scope.restaurant);
-        restaurant.latitude = marker.getPosition().lat();
-        restaurant.longitude = marker.getPosition().lng();
-        restaurant.$save({});
+    $scope.edit = function (id) {
+        document.location="#/edit/" + id;
+
+    };
+
+    $scope.createNew = function () {
+        document.location="#/new";
+    };
+
+    init();
+
+});
+
+app.controller("ChainsCtrl", function ($scope, $rootScope, Chain) {
+
+    function init() {
+        $rootScope.editablePage = false;
+        $scope.getChains();
+    }
+
+    $scope.getChains = function () {
+
+        $scope.chains = Chain.query();
+
+    };
+
+    $scope.delete = function (id) {
+        Chain.delete({"id":id}, function() {
+            $scope.chains = Chain.query();
+        });
+
+    };
+
+    $scope.edit = function (id) {
+        document.location="#/editchain/" + id;
+
+    };
+
+    $scope.createNew = function () {
+        document.location="#/newchain";
     };
 
     init();
@@ -644,11 +759,24 @@ app.controller("LoginCtrl", function ($scope, $rootScope, $location, $http, $coo
         }
     };
 
+    $rootScope.editablePage = false;
+
 });
 
-app.controller("EditChainCtrl", function ($scope, $http, $routeParams, $sce, Chain, CLabel, CReview, CPhoto, RestaurantsOfChain) {
+app.controller("EditChainCtrl", function ($scope, $http, $rootScope, $routeParams, $sce, $timeout, Chain, CLabel, CReview, CPhoto, RestaurantsOfChain) {
 
     function init() {
+
+        function fb(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+            fjs.parentNode.insertBefore(js, fjs);
+        };
+
+        $rootScope.editablePage = true;
+
         $scope.chain = Chain.get({"id": $routeParams.id});
 
         $scope.labels = CLabel.query({"chainId": $routeParams.id});
@@ -698,6 +826,12 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, $sce, Cha
         $scope.review = itemReview;
 
         $scope.slides = CPhoto.query({"id": $routeParams.id});
+
+        fb(document, 'script', 'facebook-jssdk');
+
+        //window.fbAsyncInit = function(){  // this gets triggered when FB object gets initialized
+        //    FB.XFBML.parse(document.getElementById('fb-button'));
+        //};
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -788,6 +922,9 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, $sce, Cha
             })};
 
 
+        $timeout(function(){
+            FB.XFBML.parse();
+        }, 1000);
 
 
     }
@@ -810,11 +947,13 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, $sce, Cha
                 });
                 return fd;
             }
+        }).success(function() {
+            $scope.slides = CPhoto.query({"id": $routeParams.id});
         });
     };
 
     $scope.uploadPreviewImage = function () {
-        return $http({
+        $http({
             method: 'POST',
             url: '/api/chain/preview/upload',
             headers: {
@@ -831,7 +970,35 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, $sce, Cha
                 });
                 return fd;
             }
+        }).success(function() {
+            var tempRestaurant = Chain.get({"id": $routeParams.id}, function() {
+                document.getElementById('chain_preview_img').setAttribute('src', tempRestaurant.previewImage);
+                $scope.chain.previewImage = tempRestaurant.previewImage;
+            });
         });
+
+
+    };
+
+    $scope.deletePreviewImage = function () {
+        $scope.chain.previewImage = "";
+        document.getElementById('chain_preview_img').removeAttribute('src');
+    };
+
+    $scope.deletePhoto = function () {
+        if ($scope.slides.length > 0) {
+            for (var slideId in $scope.slides) {
+                if ($scope.slides[slideId].active) {
+                    $http({
+                        method: 'DELETE',
+                        url: '/api/photo/' + $scope.slides[slideId].id
+                    }).success(function() {
+                        $scope.slides = CPhoto.query({"id": $routeParams.id});
+                    });
+                    break;
+                }
+            }
+        }
     };
 
 
@@ -894,13 +1061,60 @@ app.controller("EditChainCtrl", function ($scope, $http, $routeParams, $sce, Cha
         document.location="#/list";
     };
 
+    $scope.edit = function() {
+        document.location="#/editchain/" + $routeParams.id;
+    };
+
+    $scope.addEditor = function(tag) {
+        var obj = document.getElementById('field_review');
+        if(document.selection) obj.value += "<" + tag + "></" + tag + ">";
+        else if(typeof(obj.selectionStart) == "number")
+        {
+            var start = obj.selectionStart;
+            var end = obj.selectionEnd;
+            var value = obj.value;
+            obj.select();
+            if(start != end)
+            {
+                obj.value = value.substr(0,start) + "<" + tag + ">" + value.substr(start,end - start) + "</" + tag + ">" + value.substr(end);
+                obj.setSelectionRange(start,end + tag.length * 2 + 5);
+                $scope.review.content = obj.value;
+            }
+            else
+            {
+                obj.value = value.substr(0,start) + "<" + tag + "></" + tag + ">" + value.substr(start);
+                obj.setSelectionRange(start + tag.length + 2,start + tag.length + 2);
+            }
+        }
+    };
+
+    $scope.createLabel = function() {
+        var obj = document.getElementById('field_review');
+        if(!document.selection && typeof(obj.selectionStart) == "number") {
+            var start = obj.selectionStart;
+            var end = obj.selectionEnd;
+            var value = obj.value;
+            if(start != end) {
+                var labelValue = value.substr(start,end - start);
+                $scope.labels.push({
+                    id: null,
+                    name: labelValue,
+                    chain: Chain
+                });
+            }
+        }
+    };
+
+
     init();
 
 });
 
-app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview) {
+app.controller("AddChainCtrl", function ($scope, $http, $rootScope, Chain, CLabel, CReview) {
 
     function init() {
+
+        $rootScope.editablePage = false;
 
         $scope.labels = [];
         $scope.review = {
@@ -932,29 +1146,10 @@ app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview) 
             };
 
             var review = new CReview($scope.review);
-            review.$save({"chainId":chain.id});
+            review.$save({"chainId":chain.id}, function() {
+                document.location="#/editchain/" + chain.id;
+            });
 
-            if (fileP.files.length > 0) {
-                $http({
-                    method: 'POST',
-                    url: '/api/chain/preview/upload',
-                    headers: {
-                        'Content-Type': undefined
-                    },
-                    data: {
-                        file: fileP.files[0],
-                        idChain: chain.id
-                    },
-                    transformRequest: function (data) {
-                        var fd = new FormData();
-                        angular.forEach(data, function (value, key) {
-                            fd.append(key, value);
-                        });
-                        return fd;
-                    }
-                })
-            }
-            document.location="#/list";
         });
 
 
@@ -985,13 +1180,54 @@ app.controller("AddChainCtrl", function ($scope, $http, Chain, CLabel, CReview) 
         );
     };
 
+    $scope.addEditor = function(tag) {
+        var obj = document.getElementById('field_review');
+        if(document.selection) obj.value += "<" + tag + "></" + tag + ">";
+        else if(typeof(obj.selectionStart) == "number")
+        {
+            var start = obj.selectionStart;
+            var end = obj.selectionEnd;
+            var value = obj.value;
+            obj.select();
+            if(start != end)
+            {
+                obj.value = value.substr(0,start) + "<" + tag + ">" + value.substr(start,end - start) + "</" + tag + ">" + value.substr(end);
+                obj.setSelectionRange(start,end + tag.length * 2 + 5);
+                $scope.review.content = obj.value;
+            }
+            else
+            {
+                obj.value = value.substr(0,start) + "<" + tag + "></" + tag + ">" + value.substr(start);
+                obj.setSelectionRange(start + tag.length + 2,start + tag.length + 2);
+            }
+        }
+    };
+
+    $scope.createLabel = function() {
+        var obj = document.getElementById('field_review');
+        if(!document.selection && typeof(obj.selectionStart) == "number") {
+            var start = obj.selectionStart;
+            var end = obj.selectionEnd;
+            var value = obj.value;
+            if(start != end) {
+                var labelValue = value.substr(start,end - start);
+                $scope.labels.push({
+                    id: null,
+                    name: labelValue,
+                    chain: Chain
+                });
+            }
+        }
+    };
+
     init();
 
 });
 
-app.controller("StartCtrl", function ($scope, Restaurant, CommonReview) {
+app.controller("StartCtrl", function ($scope, $rootScope, Restaurant, CommonReview) {
 
     function init() {
+        $rootScope.editablePage = false;
         $scope.getRestaurants();
     }
 
@@ -1117,9 +1353,10 @@ app.controller("StartCtrl", function ($scope, Restaurant, CommonReview) {
 
 });
 
-app.controller("ListCtrl", function ($scope, Restaurant, Label, CLabel, CommonReview, Country, Locality, Sublocality, Street) {
+app.controller("ListCtrl", function ($scope, $rootScope, Restaurant, Label, CLabel, CommonReview, Country, Locality, Sublocality, Street) {
 
     function init() {
+        $rootScope.editablePage = false;
         $scope.orderBy = 'total';
         $scope.pageNum = 0;
         $scope.countryList = Country.query();
@@ -1266,6 +1503,72 @@ app.controller("ListCtrl", function ($scope, Restaurant, Label, CLabel, CommonRe
 
     init();
 
+});
+
+app.directive('ngAutocomplete', function($parse) {
+    return {
+
+        scope: {
+            details: '=',
+            ngAutocomplete: '=',
+            newCenterMap: '=',
+            options: '='
+        },
+
+        link: function($scope, element, attrs, model) {
+
+            //options for autocomplete
+            var opts;
+
+            //convert options provided to opts
+            var initOpts = function() {
+                opts = {};
+                if ($scope.options) {
+                    if ($scope.options.types) {
+                        opts.types = [];
+                        opts.types.push(scope.options.types);
+                    }
+                    if ($scope.options.bounds) {
+                        opts.bounds = scope.options.bounds
+                    }
+                    if ($scope.options.country) {
+                        opts.componentRestrictions = {
+                            country: scope.options.country
+                        }
+                    }
+                }
+            };
+            initOpts();
+
+            //create new autocomplete
+            //reinitializes on every change of the options provided
+            var newAutocomplete = function() {
+                $scope.gPlace = new google.maps.places.Autocomplete(element[0], opts);
+                google.maps.event.addListener($scope.gPlace, 'place_changed', function() {
+                    $scope.$apply(function() {
+//              if (scope.details) {
+                        $scope.details = $scope.gPlace.getPlace();
+//              }
+                        $scope.ngAutocomplete = element.val();
+
+                        $scope.newCenterMap($scope.details);
+                    });
+                })
+            };
+            newAutocomplete();
+
+            //watch options provided to directive
+            $scope.watchOptions = function () {
+                return $scope.options
+            };
+            $scope.$watch($scope.watchOptions, function () {
+                initOpts();
+                newAutocomplete();
+                element[0].value = '';
+                $scope.ngAutocomplete = element.val();
+            }, true);
+        }
+    };
 });
 
 

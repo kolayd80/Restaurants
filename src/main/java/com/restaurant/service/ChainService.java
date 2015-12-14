@@ -18,15 +18,6 @@ public class ChainService {
 
     public Chain save(Chain chain) {
 
-        if (chain.getId() != null) {
-            Chain savedChain = chainRepository.findOne(chain.getId());
-            if (savedChain != null) {
-                if (savedChain.getPreviewImage() != null) {
-                    chain.setPreviewImage(savedChain.getPreviewImage());
-                }
-            }
-        }
-
         return chainRepository.save(chain);
 
     }
@@ -43,6 +34,10 @@ public class ChainService {
         Chain chain = chainRepository.findOne(id);
         chain.setPreviewImage(name.replace("src/main/webapp/", "http://localhost:8080/"));
         chainRepository.save(chain);
+    }
+
+    public void delete(Long id) {
+        chainRepository.delete(id);
     }
 
 }

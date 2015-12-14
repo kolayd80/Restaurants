@@ -2,6 +2,7 @@ package com.restaurant.controller;
 
 import com.cloudinary.Singleton;
 import com.cloudinary.utils.ObjectUtils;
+import com.restaurant.controller.util.HeaderUtil;
 import com.restaurant.domain.Photo;
 import com.restaurant.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,29 +47,29 @@ public class PhotoController {
                                                  @RequestParam("idRestaurant") Long restaurantId) throws IOException {
 
 
-        Map uploadResult = Singleton.getCloudinary().uploader().upload(file.getBytes(),
-                ObjectUtils.asMap("resource_type", "auto"));
-        photoService.save(restaurantId, (String) uploadResult.get("url"));
+//        Map uploadResult = Singleton.getCloudinary().uploader().upload(file.getBytes(),
+//                ObjectUtils.asMap("resource_type", "auto"));
+//        photoService.save(restaurantId, (String) uploadResult.get("url"));
 
-//        String name = "src/main/webapp/photo/";
-//        UUID fileUuid = UUID.randomUUID();
-//        name = name+fileUuid+".jpg";
-//        if (!file.isEmpty()) {
-//            try {
-//                byte[] bytes = file.getBytes();
-//                BufferedOutputStream stream =
-//                        new BufferedOutputStream(new FileOutputStream(new File(name)));
-//                stream.write(bytes);
-//                stream.close();
-//
-//                photoService.save(restaurantId, name);
-//
-//            } catch (Exception e) {
-//                //return "You failed to upload " + name + " => " + e.getMessage();
-//            }
-//        } else {
-//            //return "You failed to upload " + name + " because the file was empty.";
-//        }
+        String name = "src/main/webapp/photo/";
+        UUID fileUuid = UUID.randomUUID();
+        name = name+fileUuid+".jpg";
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File(name)));
+                stream.write(bytes);
+                stream.close();
+
+                photoService.save(restaurantId, name);
+
+            } catch (Exception e) {
+                //return "You failed to upload " + name + " => " + e.getMessage();
+            }
+        } else {
+            //return "You failed to upload " + name + " because the file was empty.";
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -77,29 +78,41 @@ public class PhotoController {
                                  @RequestParam("idChain") Long chainId) throws IOException {
 
 
-        Map uploadResult = Singleton.getCloudinary().uploader().upload(file.getBytes(),
-                ObjectUtils.asMap("resource_type", "auto"));
-        photoService.save(chainId, (String) uploadResult.get("url"));
+//        Map uploadResult = Singleton.getCloudinary().uploader().upload(file.getBytes(),
+//                ObjectUtils.asMap("resource_type", "auto"));
+//        photoService.save(chainId, (String) uploadResult.get("url"));
 
-//        String name = "src/main/webapp/photo/";
-//        UUID fileUuid = UUID.randomUUID();
-//        name = name+fileUuid+".jpg";
-//        if (!file.isEmpty()) {
-//            try {
-//                byte[] bytes = file.getBytes();
-//                BufferedOutputStream stream =
-//                        new BufferedOutputStream(new FileOutputStream(new File(name)));
-//                stream.write(bytes);
-//                stream.close();
-//
-//                photoService.saveForChain(chainId, name);
-//
-//            } catch (Exception e) {
-//                //return "You failed to upload " + name + " => " + e.getMessage();
-//            }
-//        } else {
-//            //return "You failed to upload " + name + " because the file was empty.";
-//        }
+        String name = "src/main/webapp/photo/";
+        UUID fileUuid = UUID.randomUUID();
+        name = name+fileUuid+".jpg";
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File(name)));
+                stream.write(bytes);
+                stream.close();
+
+                photoService.saveForChain(chainId, name);
+
+            } catch (Exception e) {
+                //return "You failed to upload " + name + " => " + e.getMessage();
+            }
+        } else {
+            //return "You failed to upload " + name + " because the file was empty.";
+        }
+    }
+
+    /**
+     * DELETE  /restaurants/:id -> delete the "id" restaurant.
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> deletePhoto(@PathVariable Long id) {
+        photoService.delete(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("photo", id.toString())).build();
     }
 
 }

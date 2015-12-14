@@ -2,29 +2,6 @@
     <h4 class="modal-title" id="myRestaurantLabel" >{{["Add","Edit"][(restaurant.id>0)+0]}} restaurant</h4>
 </div>
 
-
-<div class="container">
-    <div class="offsetspan6">
-        <uib-carousel interval=100000>
-            <uib-slide ng-repeat="slide in slides" active="slide.active">
-                <img class="image-circle" ng-src="{{slide.name}}"    style="margin:auto;"/>
-                <div class="carousel-caption">
-                    <p>{{slide.review}}</p>
-                </div>
-
-            </uib-slide>
-        </uib-carousel>
-    </div>
-</div>
-<form class="btns"  ng-submit="uploadPhoto()" ng-show="(restaurant.id>0)+0">
-    <input type="file" name="file" ng-model="file" id="file"><br />
-    <input type="submit" value="Upload file">
-</form>
-
-<form class="btns"  ng-submit="uploadPreviewImage()" ng-show="(restaurant.id>0)+0">
-    <input type="file" name="file" ng-model="fileP" id="fileP"><br />
-    <input type="submit" value="Upload preview image">
-</form>
 <form >
 
     <div class="modal-body">
@@ -45,6 +22,13 @@
 
         <div class="form-textarea-group">
             <label for="field_review">Review</label>
+            <p align="right">
+                <input type="button" value="<b>" ng-click="addEditor('b')" >&nbsp;
+                <input type="button" value="<i>" ng-click="addEditor('i')" >&nbsp;
+                <input type="button" value="<u>" ng-click="addEditor('u')" >&nbsp;
+                <input type="button" value="<p>" ng-click="addEditor('p')" >&nbsp;
+                <input type="button" value="create label" ng-click="createLabel()" >&nbsp;
+            </p>
             <textarea rows="6" class="form-control" name="review" id="field_review"
                       ng-model="review.content">
 
@@ -113,6 +97,12 @@
             </select>
             <button ng-click="forceClearChain()">Clear chain</button><br>
         </div>
+
+        <div class="form-group move-down" ng-show="!(restaurant.id>0)+0">
+            <label for="Autocomplete">Location</label>
+            <input type="text" id="Autocomplete" class="form-control" ng-autocomplete="result1" details="details1" options="options1" new-center-map="newCenterMap"/>
+        </div>
+
         <div id="mapContainer"></div>
 
         <div class="form-group">
@@ -163,4 +153,31 @@
             </button>
         </div>
     </div>
+</form>
+
+<img id="resto_preview_img" ng-src="{{restaurant.previewImage}}">
+<form ng-show="(restaurant.id>0)+0">
+    <input type="file" name="file" ng-model="fileP" id="fileP"><br />
+    <button class="btn" ng-click="uploadPreviewImage()">Upload preview image</button>
+    <button class="btn" ng-click="deletePreviewImage()">Delete preview image</button>
+</form>
+
+
+<div class="container">
+    <div class="offsetspan6">
+        <uib-carousel interval=100000>
+            <uib-slide ng-repeat="slide in slides" active="slide.active">
+                <img id="resto_slide_img" class="image-circle" ng-src="{{slide.name}}"    style="margin:auto;"/>
+                <div class="carousel-caption">
+                    <p>{{slide.review}}</p>
+                </div>
+
+            </uib-slide>
+        </uib-carousel>
+    </div>
+</div>
+<form class="btns" ng-show="(restaurant.id>0)+0">
+    <input type="file" name="file" ng-model="file" id="file"><br />
+    <button class="btn" ng-click="uploadPhoto()">Upload photo</button>
+    <button class="btn" ng-click="deletePhoto()">Delete photo</button>
 </form>

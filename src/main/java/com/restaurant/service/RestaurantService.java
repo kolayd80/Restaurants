@@ -79,7 +79,15 @@ public class RestaurantService {
     }
 
     public void delete(Long id) {
+
+        Chain oldChain = null;
+        oldChain = restaurantRepository.findOne(id).getChain();
+
         restaurantRepository.delete(id);
+
+        if (oldChain!=null) {
+            reviewService.setRatingForChain(oldChain);
+        }
     }
 
     public void savePreview(Long id, String name) {

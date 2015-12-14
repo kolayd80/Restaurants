@@ -1,0 +1,49 @@
+<div>
+
+    <div class="container">
+        <div class="row empty_row">
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" ng-click="createNew()">
+                    <span class="glyphicon glyphicon-flash"></span> <span>Create a new Restaurant</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="restaurant in restaurants">
+                <td><a href="#/edit/{{restaurant.id}}">{{restaurant.id}}</a></td>
+                <td>{{restaurant.name}}</td>
+                <td>
+                    <button type="submit"
+                            ng-click="edit(restaurant.id)"
+                            class="btn btn-primary btn-sm">
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
+                    </button>
+                    <button type="submit"
+                            ng-click="deleteRestaurant(restaurant.id)"
+                            class="btn btn-danger btn-sm">
+                        <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

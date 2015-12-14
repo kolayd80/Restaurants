@@ -39,7 +39,7 @@ public class Restaurant implements Serializable {
     @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Label> labels = new HashSet<>();
 
