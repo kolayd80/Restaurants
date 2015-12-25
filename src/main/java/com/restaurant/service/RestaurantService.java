@@ -65,6 +65,10 @@ public class RestaurantService {
         return restaurantRepository.findAll();
     }
 
+    public List<Restaurant> findAllOrderById() {
+        return restaurantRepository.findAllOrderById();
+    }
+
     public List<Restaurant> findByChain(Chain chain) {
         return restaurantRepository.findByChain(chain);
     }

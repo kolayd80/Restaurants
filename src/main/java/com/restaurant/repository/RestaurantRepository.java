@@ -3,6 +3,7 @@ package com.restaurant.repository;
 import com.restaurant.domain.Chain;
 import com.restaurant.domain.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -12,6 +13,9 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     //List<Restaurant> findByOrderByTotalratingDesc();
+
+    @Query("select p from Restaurant p order by id asc")
+    List<Restaurant> findAllOrderById();
 
     List<Restaurant> findByChain(Chain chain);
 
