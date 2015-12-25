@@ -368,3 +368,12 @@ body {
 .empty_row {
     height: 80px;
 }
+
+.form-textarea-group {
+    padding-bottom: 20px;
+}
+
+#chooseChain {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}

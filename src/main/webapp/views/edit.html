@@ -89,7 +89,35 @@
         </div>
 
 
-        <div class="form-group">
+        <div class="ratings_wrapper">
+            <div class="ratings_box_kitchen ratings_box">
+                <h3>KITCHEN</h3>
+                <div id="kitchen_rating">
+                <div id="kitchen_blank"></div> <!--блок пустых звезд-->
+                <div id="kitchen_hover"></div> <!--блок  звезд при наведении мышью-->
+                <div id="kitchen_votes"></div> <!--блок с итогами голосов -->
+                </div>
+            </div>
+            <div class="ratings_box_service ratings_box">
+                <h3>SERVICE</h3>
+                <div id="service_rating">
+                <div id="service_blank"></div> <!--блок пустых звезд-->
+                <div id="service_hover"></div> <!--блок  звезд при наведении мышью-->
+                <div id="service_votes"></div> <!--блок с итогами голосов -->
+                    </div>
+            </div>
+            <div class="ratings_box_interior ratings_box">
+                <h3>INTERIOR</h3>
+                <div id="interior_rating">
+                <div id="interior_blank"></div> <!--блок пустых звезд-->
+                <div id="interior_hover"></div> <!--блок  звезд при наведении мышью-->
+                <div id="interior_votes"></div> <!--блок с итогами голосов -->
+                    </div>
+            </div>
+
+        </div>
+
+        <!--<div class="form-group">
             <label for="field_kitchenrating">Kitchen rating</label>
             <input type="number" class="form-control" name="kitchenrating" id="field_kitchenrating"
                    ng-model="review.kitchen"
@@ -142,7 +170,7 @@
                     This field should be a number.
                 </p>
             </div>
-        </div>
+        </div>-->
         <div id="chooseChain">
             <label for="select_chain">Chain</label>
             <select id="select_chain" ng-model="restaurant.chain"

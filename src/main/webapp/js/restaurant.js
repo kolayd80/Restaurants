@@ -208,10 +208,10 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $rootScope, $route
     function fb(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
+        js = d.createElement(s);
+        js.id = id;
         js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
         fjs.parentNode.insertBefore(js, fjs);
-
 
 
     };
@@ -223,9 +223,7 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $rootScope, $route
         fb(document, 'script', 'facebook-jssdk');
 
 
-
-
-        var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function(){
+        var itemRestaurant = Restaurant.get({"id": $routeParams.id}, function () {
             var itemLatitude = itemRestaurant.latitude;
             var itemLongitude = itemRestaurant.longitude;
 
@@ -253,7 +251,7 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $rootScope, $route
                             draggable: true,
                             title: "Вы здесь"
                         });
-                    }, function (err){
+                    }, function (err) {
                         var itemLatitude = 46.4879;
                         var itemLongitude = 30.7409;
 
@@ -304,22 +302,29 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $rootScope, $route
             }
 
 
-
         });
         $scope.restaurant = itemRestaurant;
 
         $scope.labels = Label.query({"restaurantId": $routeParams.id});
 
-        var itemReview = Review.get({"restaurantId": $routeParams.id}, function(){
+        var itemReview = Review.get({"restaurantId": $routeParams.id}, function () {
             var kitchenrating = itemReview.kitchen;
-            var kitchen_star_width = kitchenrating*16 + Math.ceil(kitchenrating);
+            var kitchen_star_width = kitchenrating * 16 + Math.ceil(kitchenrating);
             $('#kitchen_votes').width(kitchen_star_width);
             var interiorrating = itemReview.interior;
-            var interior_star_width = interiorrating*16 + Math.ceil(interiorrating);
+            var interior_star_width = interiorrating * 16 + Math.ceil(interiorrating);
             $('#interior_votes').width(interior_star_width);
             var servicerating = itemReview.service;
-            var service_star_width = servicerating*16 + Math.ceil(servicerating);
+            var service_star_width = servicerating * 16 + Math.ceil(servicerating);
             $('#service_votes').width(service_star_width);
+
+            $scope.kitchenRating = kitchenrating;
+            $scope.interiorRating = interiorrating;
+            $scope.serviceRating = servicerating;
+
+            $scope.kitchenNewRating = kitchenrating;
+            $scope.interiorNewRating = interiorrating;
+            $scope.serviceNewRating = servicerating;
 
             $scope.reviewHtml = $sce.trustAsHtml(itemReview.content);
 
@@ -352,16 +357,14 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $rootScope, $route
             }
 
 
-            $timeout(function(){
+            $timeout(function () {
                 FB.XFBML.parse();
             }, 1000);
-
 
 
         });
 
         $scope.review = itemReview;
-
 
 
         // Set of Photos
@@ -371,6 +374,66 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $rootScope, $route
 
 
     }
+
+    $('#kitchen_rating').hover(function () {
+            $('#kitchen_votes, #kitchen_hover').toggle();
+        },
+        function () {
+            $('#kitchen_votes, #kitchen_hover').toggle();
+        });
+
+    var margin_kitchen = $("#kitchen_rating").offset();
+    $("#kitchen_rating").mousemove(function(e){
+        var widht_votes = e.pageX - margin_kitchen.left;
+        $scope.kitchenNewRating = Math.ceil(widht_votes/17);
+        $('#kitchen_hover').width($scope.kitchenNewRating*17);
+    });
+
+    $('#kitchen_rating').click(function(){
+        $scope.kitchenRating = $scope.kitchenNewRating;
+        var kitchen_star_width = $scope.kitchenRating * 16 + Math.ceil($scope.kitchenRating);
+        $('#kitchen_votes').width(kitchen_star_width);
+    });
+
+    $('#interior_rating').hover(function () {
+            $('#interior_votes, #interior_hover').toggle();
+        },
+        function () {
+            $('#interior_votes, #interior_hover').toggle();
+        });
+
+    var margin_interior = $("#interior_rating").offset();
+    $("#interior_rating").mousemove(function(e){
+        var widht_votes = e.pageX - margin_interior.left;
+        $scope.interiorNewRating = Math.ceil(widht_votes/17);
+        $('#interior_hover').width($scope.interiorNewRating*17);
+    });
+
+    $('#interior_rating').click(function(){
+        $scope.interiorRating = $scope.interiorNewRating;
+        var interior_star_width = $scope.interiorRating * 16 + Math.ceil($scope.interiorRating);
+        $('#interior_votes').width(interior_star_width);
+    });
+
+    $('#service_rating').hover(function () {
+            $('#service_votes, #service_hover').toggle();
+        },
+        function () {
+            $('#service_votes, #service_hover').toggle();
+        });
+
+    var margin_service = $("#service_rating").offset();
+    $("#service_rating").mousemove(function(e){
+        var widht_votes = e.pageX - margin_service.left;
+        $scope.serviceNewRating = Math.ceil(widht_votes/17);
+        $('#service_hover').width($scope.serviceNewRating*17);
+    });
+
+    $('#service_rating').click(function(){
+        $scope.serviceRating = $scope.serviceNewRating;
+        var service_star_width = $scope.serviceRating * 16 + Math.ceil($scope.serviceRating);
+        $('#service_votes').width(service_star_width);
+    });
 
     $scope.newCenterMap = function (details) {
         map.setCenter(details.geometry.location);
@@ -504,6 +567,9 @@ app.controller("EditRestaurantCtrl", function ($scope, $http, $rootScope, $route
             });
 
             var review = new Review($scope.review);
+            review.kitchen = $scope.kitchenRating;
+            review.interior = $scope.interiorRating;
+            review.service = $scope.serviceRating;
             if($scope.review.id==null|undefined) {
                 review.$save({"restaurantId":restaurant.id});
             } else {
