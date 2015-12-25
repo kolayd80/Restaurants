@@ -38,15 +38,15 @@ public class RestaurantService {
 
     public Restaurant save(Restaurant restaurant) {
 
-
-        try {
-            geoDecoding(restaurant);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (restaurant.getLatitude() != null) {
+            try {
+                geoDecoding(restaurant);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-
         Chain oldChain = null;
         if (restaurant.getId()!=null) {
             oldChain = restaurantRepository.findOne(restaurant.getId()).getChain();

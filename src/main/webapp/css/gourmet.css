@@ -34,24 +34,36 @@ tbody {
     }
 }
 
+.start-header h1 {
+    margin-top: 0px;
+}
+
 .view-first {
     width: 99%;
     height: 150px;
     position: relative;
+    display: block;
 }
 
 .view img {
     width: 99%;
     height: 140px;
-    display: block;
     position: relative;
 }
 
+.view img:hover {
+    cursor:pointer;
+    opacity:.5;
+}
+
 .view-first-details {
+    width: 99%;
     position: absolute;
     bottom: 8px;
-    left: 10px;
+    left: 0;
     right: 0;
+    height: 43px;
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .details-rating {
@@ -65,8 +77,6 @@ tbody {
     right: 10px;
     margin-top: 5px;
     float: right;
-    background: #3f7e00;
-    display: block;
     font-family: "Helvetica Neue","Segoe UI",Arial,sans-serif;
     border-radius: 5px;
     letter-spacing: 1px;
@@ -84,8 +94,6 @@ tbody {
     left: 10px;
     margin-top: 5px;
     float: right;
-    background: #3f7e00;
-    display: block;
     font-family: "Helvetica Neue","Segoe UI",Arial,sans-serif;
     border-radius: 5px;
     letter-spacing: 1px;
@@ -94,12 +102,27 @@ tbody {
 
 .start-header {
     text-align: center;
+    margin-bottom: 5px;
 }
 
 .moreButtons {
     text-align:center;
 
 }
+
+.list-page {
+    padding-top: 50px;
+}
+
+.page_title_container {
+    padding-top: 50px;
+}
+
+.modal-header {
+    padding-top: 50px;
+}
+
+
 
 .results {
     border-right: 1px solid #ec008c;
@@ -111,6 +134,21 @@ tbody {
     padding-left: 30px;
     padding-right: 30px;
     display:block;
+}
+
+.results a {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.pagination {
+    width: 100%;
+    text-align: center;
+}
+
+.pagination a {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .item-image {
@@ -167,6 +205,12 @@ tbody {
     padding-right: 5px;
     font-family: 'Open Sans Condensed','Arial','sans-serif';
 
+}
+
+.edit-page {
+    width: 750px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .page_title_container {

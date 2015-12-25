@@ -1,3 +1,29 @@
+<div>
+    <nav class="navbar navbar-fixed-top navbar-default" role="navigation" >
+        <div class="container">
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#/index.html">Home</a></li>
+                    <li><a href="#/list">More restaurants</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right" ng-show="user">
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown">{{user.name}} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li ng-show="editablePage"><a href="" ng-click="edit()">Edit</a></li>
+                            <li><a href="" ng-click="restaurantsList()">Restaurants</a></li>
+                            <li><a href="" ng-click="chainsList()">Chains</a></li>
+                            <li><a href="" ng-click="logout()">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="edit-page">
 <div class="modal-header">
     <h4 class="modal-title" id="myRestaurantLabel" >{{["Add","Edit"][(restaurant.id>0)+0]}} restaurant</h4>
 </div>
@@ -13,6 +39,33 @@
                    ng-model="restaurant.name"
                     >
         </div>
+
+        <img id="resto_preview_img" ng-src="{{restaurant.previewImage}}">
+        <form ng-show="(restaurant.id>0)+0">
+            <input type="file" name="file" ng-model="fileP" id="fileP"><br />
+            <button class="btn" ng-click="uploadPreviewImage()">Upload preview image</button>
+            <button class="btn" ng-click="deletePreviewImage()">Delete preview image</button>
+        </form>
+
+
+        <div class="container">
+            <div class="offsetspan6">
+                <uib-carousel interval=100000>
+                    <uib-slide ng-repeat="slide in slides" active="slide.active">
+                        <img id="resto_slide_img" class="image-circle" ng-src="{{slide.name}}"    style="margin:auto;"/>
+                        <div class="carousel-caption">
+                            <p>{{slide.review}}</p>
+                        </div>
+
+                    </uib-slide>
+                </uib-carousel>
+            </div>
+        </div>
+        <form class="btns" ng-show="(restaurant.id>0)+0">
+            <input type="file" name="file" ng-model="file" id="file"><br />
+            <button class="btn" ng-click="uploadPhoto()">Upload photo</button>
+            <button class="btn" ng-click="deletePhoto()">Delete photo</button>
+        </form>
 
         <div ng-repeat="label in labels">
             <input type="text" ng-model="label.name">
@@ -98,7 +151,7 @@
             <button ng-click="forceClearChain()">Clear chain</button><br>
         </div>
 
-        <div class="form-group move-down" ng-show="!(restaurant.id>0)+0">
+        <div class="form-group move-down">
             <label for="Autocomplete">Location</label>
             <input type="text" id="Autocomplete" class="form-control" ng-autocomplete="result1" details="details1" options="options1" new-center-map="newCenterMap"/>
         </div>
@@ -154,30 +207,5 @@
         </div>
     </div>
 </form>
-
-<img id="resto_preview_img" ng-src="{{restaurant.previewImage}}">
-<form ng-show="(restaurant.id>0)+0">
-    <input type="file" name="file" ng-model="fileP" id="fileP"><br />
-    <button class="btn" ng-click="uploadPreviewImage()">Upload preview image</button>
-    <button class="btn" ng-click="deletePreviewImage()">Delete preview image</button>
-</form>
-
-
-<div class="container">
-    <div class="offsetspan6">
-        <uib-carousel interval=100000>
-            <uib-slide ng-repeat="slide in slides" active="slide.active">
-                <img id="resto_slide_img" class="image-circle" ng-src="{{slide.name}}"    style="margin:auto;"/>
-                <div class="carousel-caption">
-                    <p>{{slide.review}}</p>
-                </div>
-
-            </uib-slide>
-        </uib-carousel>
-    </div>
 </div>
-<form class="btns" ng-show="(restaurant.id>0)+0">
-    <input type="file" name="file" ng-model="file" id="file"><br />
-    <button class="btn" ng-click="uploadPhoto()">Upload photo</button>
-    <button class="btn" ng-click="deletePhoto()">Delete photo</button>
-</form>
+

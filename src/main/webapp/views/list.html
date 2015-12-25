@@ -1,4 +1,28 @@
 <div>
+    <nav class="navbar navbar-fixed-top navbar-default" role="navigation" >
+        <div class="container">
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#/index.html">Home</a></li>
+                    <li class="active"><a href="">More restaurants</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right" ng-show="user">
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown">{{user.name}} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li ng-show="editablePage"><a href="" ng-click="edit()">Edit</a></li>
+                            <li><a href="" ng-click="restaurantsList()">Restaurants</a></li>
+                            <li><a href="" ng-click="chainsList()">Chains</a></li>
+                            <li><a href="" ng-click="logout()">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="list-page">
     <div class="col-md-8">
         <table class="results">
             <tbody>
@@ -10,7 +34,6 @@
                         <a ng-click="sortBy('interior')">Interior</a>
                         <a ng-click="sortBy('service')">Service</a>
                         <a ng-click="sortBy('createdDate')">Review date</a>
-                        <a ng-click="sortBy('popularity')">Popularity</a>
                     </th>
                 </tr>
                 <tr ng-repeat="item in items" class="item-row" ng-click="viewItem(item)">
@@ -28,13 +51,19 @@
                         {{item.sortcol}}
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="3">
+                        <div class="pagination">
+                            <a ng-show="pageNum !== 0" ng-click="showPage(pageNum-1)">Prev</a>
+                            <a ng-repeat="page in pagesArray" ng-click="showPage(page)">{{page + 1}}</a>
+                            <a ng-show="pageNum !== totalPages-1" ng-click="showPage(pageNum+1)">Next</a>
+                        </div>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
-        <div class="pagination">
-            <a ng-show="pageNum !== 0" ng-click="showPage(pageNum-1)">Prev</a>
-            <a ng-repeat="page in pagesArray" ng-click="showPage(page)">{{page + 1}}</a>
-            <a ng-show="pageNum !== totalPages-1" ng-click="showPage(pageNum+1)">Next</a>
-        </div>
+
     </div>
     <div class="col-md-4">
         <div class="text-fl-filter">
