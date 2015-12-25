@@ -73,6 +73,17 @@ public class RestaurantService {
         return restaurantRepository.findByChain(chain);
     }
 
+    public List<Restaurant> findByCity(String countryName, String localityName) {
+        Country country = addressService.findCountryByName(countryName);
+        if (country != null) {
+            Locality locality = addressService.findLocalityByName(localityName, country);
+            if (locality != null) {
+                return restaurantRepository.findByLocality(locality);
+            }
+        }
+        return restaurantRepository.findAll();
+    }
+
     public List<Restaurant> findOrderByTotalratingDesc() {
         return restaurantRepository.findAll();
         //return restaurantRepository.findByOrderByTotalratingDesc();

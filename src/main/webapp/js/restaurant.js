@@ -165,6 +165,19 @@ app.factory("CommonReview", function ($resource) {
     });
 });
 
+app.factory("RestaurantCity", function ($resource) {
+    return $resource('/api/restaurants/city/:id', {id: "@id"}, {
+        query: {
+            method:'GET',
+            isArray:true,
+            params: {
+            country: "@country",
+            locality: "@locality"
+        }},
+        update: {method:'PUT'},
+    });
+});
+
 app.factory("Country", function ($resource) {
     return $resource('/api/location/country/:id', {id: "@id"}, {
         update: {method:'PUT'},
@@ -1820,7 +1833,7 @@ app.controller("AddChainCtrl", function ($scope, $http, $rootScope, Chain, CLabe
 
 });
 
-app.controller("StartCtrl", function ($scope, $rootScope, Restaurant, CommonReview) {
+app.controller("StartCtrl", function ($scope, $rootScope, Restaurant, CommonReview, RestaurantCity) {
 
     function init() {
         $rootScope.editablePage = false;
@@ -1867,24 +1880,56 @@ app.controller("StartCtrl", function ($scope, $rootScope, Restaurant, CommonRevi
                 markers = [];
 
                 var re;
-                var listOfRestaurants = Restaurant.query(function () {
-                    for (re in listOfRestaurants) {
-                        var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
-                        var newMarker = new google.maps.Marker({
-                            position: latlng,
-                            map: mapOfRestaurants,
-                            icon: 'https://maps.google.com/mapfiles/kml/pal2/icon32.png',
-                            title: listOfRestaurants[re].name
-                        });
-                        var markerUrl = 'index.html#/view/' + listOfRestaurants[re].id;
-                        google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
-                            return function () {
-                                document.location = markerUrl;
-                            }
-                        }(markerUrl));
-                        markers.push(newMarker);
+                var listOfRestaurants = null;
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({
+                    'latLng': coords
+                }, function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            var locationName = results[0].address_components[3].short_name;
+                            var countryName = results[0].address_components[6].long_name;
+                            listOfRestaurants = RestaurantCity.query({country: countryName, locality: locationName}, function () {
+                                for (re in listOfRestaurants) {
+                                    var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
+                                    var newMarker = new google.maps.Marker({
+                                        position: latlng,
+                                        map: mapOfRestaurants,
+                                        icon: 'https://maps.google.com/mapfiles/kml/pal2/icon32.png',
+                                        title: listOfRestaurants[re].name
+                                    });
+                                    var markerUrl = 'index.html#/view/' + listOfRestaurants[re].id;
+                                    google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
+                                        return function () {
+                                            document.location = markerUrl;
+                                        }
+                                    }(markerUrl));
+                                    markers.push(newMarker);
+                                }
+                            });
+                        }
                     }
                 });
+                if (listOfRestaurants == null ) {
+                    listOfRestaurants = Restaurant.query(function () {
+                        for (re in listOfRestaurants) {
+                            var latlng = new google.maps.LatLng(listOfRestaurants[re].latitude, listOfRestaurants[re].longitude);
+                            var newMarker = new google.maps.Marker({
+                                position: latlng,
+                                map: mapOfRestaurants,
+                                icon: 'https://maps.google.com/mapfiles/kml/pal2/icon32.png',
+                                title: listOfRestaurants[re].name
+                            });
+                            var markerUrl = 'index.html#/view/' + listOfRestaurants[re].id;
+                            google.maps.event.addListener(newMarker, 'click', function (markerUrl) {
+                                return function () {
+                                    document.location = markerUrl;
+                                }
+                            }(markerUrl));
+                            markers.push(newMarker);
+                        }
+                    });
+                }
                 $scope.restaurants = listOfRestaurants;
 
                 var reviewsTop = CommonReview.query({"search": "", "page": 0, "per_page": 10, "sortby": 'total'}, function () {

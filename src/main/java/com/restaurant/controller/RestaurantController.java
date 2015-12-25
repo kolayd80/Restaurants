@@ -200,6 +200,14 @@ public class RestaurantController {
         return restaurantService.findByChain(chainService.findOne(chainId));
     }
 
+    @RequestMapping(value = "/restaurants/city",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Restaurant> getRestaurantsOfCity(@RequestParam(value = "country") final String countryName,
+                                                 @RequestParam(value = "locality") final String localityName) {
+        return restaurantService.findByCity(countryName, localityName);
+    }
+
     @RequestMapping(value = "/restaurant/{restauranId}/label",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
